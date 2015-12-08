@@ -18,7 +18,10 @@ proj.linux
 proj.win8.1-universal
 proj.win32
 proj.android
+proj.android-studio
 proj.ios_mac
 
 #Resources
 #Resources
+.cocos-project.json
+CMakeLists.txt
