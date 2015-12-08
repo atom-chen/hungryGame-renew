@@ -1,47 +1,24 @@
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
+#################
+## ignore files
 
-# Folder config file
-Desktop.ini
+#cocosDenshion
+CocosDenshion
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+#Debug.win32
+Debug.win32
 
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
+#cocos2dx
+cocos2dx
+extensions
+external
+cocos2d
 
-# Windows shortcuts
-*.lnk
+#proj dirs
+proj.linux
+proj.win8.1-universal
+proj.win32
+proj.android
+proj.ios_mac
 
-# =========================
-# Operating System Files
-# =========================
-
-# OSX
-# =========================
-
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
+#Resources
+#Resources

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="7" height="9" tilewidth="60" tileheight="60">
+ <tileset firstgid="1" name="wall" tilewidth="60" tileheight="60">
+  <image source="wall.png" width="120" height="120"/>
+ </tileset>
+ <tileset firstgid="5" source="metaset1.tsx"/>
+ <tileset firstgid="6" name="background1" tilewidth="60" tileheight="60">
+  <image source="background1.png" width="424" height="544"/>
+ </tileset>
+ <layer name="background" width="7" height="9">
+  <data encoding="base64" compression="zlib">
+   eJwNw0VyAgEAALA94Q6F4k6x4u72/zeRzCQUBEHYiFFjxk2YNGXajFlz5i34Y9GSv5atWLVm3YZNW7bt2LVn34F/Dh05duLUf2fOXbh05dqNW3fuPXj05NmLV2/effj05duPX0kpCRw=
+  </data>
+ </layer>
+ <objectgroup name="foods" width="7" height="9">
+  <object name="food1" x="248" y="429" width="45" height="44"/>
+  <object name="food3" x="305" y="131" width="43" height="46"/>
+  <object name="food4" x="183" y="8" width="47" height="47"/>
+  <object name="food2" x="5" y="246" width="47" height="49"/>
+  <object name="food5" x="366" y="247" width="42" height="48"/>
+ </objectgroup>
+ <objectgroup name="object" width="7" height="9">
+  <object name="character" x="6" y="485" width="51" height="45"/>
+ </objectgroup>
+ <layer name="wall" width="7" height="9">
+  <data encoding="base64" compression="zlib">
+   eJxjYMAPmHHQlAIWIGaE0tQATDhofAAADfgAGQ==
+  </data>
+ </layer>
+ <layer name="Items" width="7" height="9">
+  <data encoding="base64" compression="zlib">
+   eJxjYMAPWHHQlAJam0eMuQAU/AAp
+  </data>
+ </layer>
+ <objectgroup name="endPoint" width="7" height="9">
+  <object name="counter" x="186" y="247" width="48" height="50"/>
+ </objectgroup>
+</map>
