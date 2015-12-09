@@ -23,10 +23,18 @@ main, ingame, game end
 ##Framework & Libs
 - Cocos2d-x 3.x
 
-
 ## Target Platform
 - android
 - iOS
+
+## Getting Started
+1. clone this project 
+
+2. excute cocos command, make project
+
+  $cocos new -p com.company.hungrygame -l cpp hungrygame
+
+3. copy .git directory, .gitignore file to hungrygame directory
 
 ## Collaborators
 - pineoc
