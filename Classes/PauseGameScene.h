@@ -9,30 +9,31 @@
 #define _PauseGameScene_
 
 #include "cocos2d.h"
+using namespace cocos2d;
 
-class PauseGameScene : public cocos2d::CCLayerColor
+class PauseGameScene : public LayerColor
 {
 public:
 	virtual bool init();
 
-	static cocos2d::CCScene* scene();
+	static Scene* createScene();
 	CREATE_FUNC(PauseGameScene);
-	cocos2d::CCSize winSize;
+	Size winSize;
 
-	CCLayerColor* backLayer;
-	CCLayerColor* popUpLayer;
+	LayerColor* backLayer;
+	LayerColor* popUpLayer;
 
 	int pStageidx;// integer for regame 
 
 	//메뉴 4가지
-	void goMain( CCObject* pSender );	//메인으로
-	void newGame( CCObject* pSender );	//새게임
-	void goHelp ( CCObject* pSender );	//도움말
-	void doClose( CCObject* pSender );	//이어하기
+	void goMain( Object* pSender );	//메인으로
+	void newGame( Object* pSender );	//새게임
+	void goHelp ( Object* pSender );	//도움말
+	void doClose( Object* pSender );	//이어하기
 	
 	void setStageIdx(int num); // set stage index 
 	
-	void menuPauseCallback (CCObject* pSender);	//콜백
+	void menuPauseCallback (Object* pSender);	//콜백
 };
 
 #endif

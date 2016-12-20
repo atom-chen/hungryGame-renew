@@ -7,13 +7,13 @@
 
 using namespace cocos2d;
 
-CCScene* mainScene::scene()
+Scene* mainScene::createScene()
 {
-    CCScene * scene = NULL;
+    Scene *scene = NULL;
     do 
     {
         // 'scene' is an autorelease object
-        scene = CCScene::create();
+        scene = Scene::create();
         CC_BREAK_IF(! scene);
 
         // 'layer' is an autorelease object
@@ -34,45 +34,35 @@ bool mainScene::init()
     bool bRet = false;
     do 
     {
-        //////////////////////////////////////////////////////////////////////////
-        // super init first
-        //////////////////////////////////////////////////////////////////////////
 
-		CC_BREAK_IF(! CCLayerColor::initWithColor(ccc4(255, 255, 255, 100)));
+        CC_BREAK_IF(! LayerColor::initWithColor(Color4B::WHITE));
 
-        //////////////////////////////////////////////////////////////////////////
-        // add your codes below...
-        //////////////////////////////////////////////////////////////////////////
-
-		//화면 전체 크기
-		CCSize size = CCDirector::sharedDirector()->getWinSize();
+		Size size = Director::getInstance()->getWinSize();
 
 		music mu;
 		mu.bgStart("background.mp3");
         // 1. Add a menu item with "X" image, which is clicked to quit the program.
 
 		// 메인화면 배경 이미지 생성
-		CCSprite *pMainBg = CCSprite::create("main_bg.png");
-
-		pMainBg->setPosition(ccp(size.width/2, size.height/2));
-
+		Sprite *pMainBg = Sprite::create("img/main_bg.png");
+		pMainBg->setPosition(Vec2(size.width/2, size.height/2));
 		this->addChild(pMainBg, 1);
 
 
         // 게임종료 버튼
-        CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
-            "main_btn_endgame.png",
-            "main_btn_endgame_n.png",
+        MenuItemImage *pCloseItem = MenuItemImage::create(
+            "img/main_btn_endgame.png",
+            "img/main_btn_endgame_n.png",
             this,
 			menu_selector(mainScene::menuCloseCallback));
         CC_BREAK_IF(! pCloseItem);
 
         // Place the menu item bottom-right conner.
-		pCloseItem->setPosition(ccp(size.width / 2 , size.height / 14.2));
+		pCloseItem->setPosition(Vec2(size.width / 2 , size.height / 14.2));
 
         // Create a menu with the "close" menu item, it's an auto release object.
-        CCMenu* pMenu = CCMenu::create(pCloseItem, NULL);
-        pMenu->setPosition(CCPointZero);
+        Menu* pMenu = Menu::create(pCloseItem, NULL);
+        pMenu->setPosition(Vec2());
         CC_BREAK_IF(! pMenu);
 
         // Add the menu to HelloWorld layer as a child layer.
@@ -82,19 +72,19 @@ bool mainScene::init()
 
 		//개발자 버튼
 
-		CCMenuItemImage *pDevItem = CCMenuItemImage::create(
-            "main_btn_info.png",
-            "main_btn_info_n.png",
+		MenuItemImage *pDevItem = MenuItemImage::create(
+            "img/main_btn_info.png",
+            "img/main_btn_info_n.png",
             this,
 			menu_selector(mainScene::menuDevCallback));
         CC_BREAK_IF(! pDevItem);
 
         // Place the menu item bottom-right conner.
-		pDevItem->setPosition(ccp(size.width /2 , size.height /5.26 ));
+		pDevItem->setPosition(Vec2(size.width /2 , size.height /5.26 ));
 
         // Create a menu with the "close" menu item, it's an auto release object.
-        CCMenu* pDevMenu = CCMenu::create(pDevItem, NULL);
-        pDevMenu->setPosition(CCPointZero);
+        Menu* pDevMenu = Menu::create(pDevItem, NULL);
+        pDevMenu->setPosition(Vec2());
         CC_BREAK_IF(! pDevMenu);
 
         // Add the menu to HelloWorld layer as a child layer.
@@ -104,19 +94,19 @@ bool mainScene::init()
 
 		//옵션 버튼
 
-		CCMenuItemImage *pOptionItem = CCMenuItemImage::create(
-            "main_btn_option.png",
-            "main_btn_option_c.png",
+		MenuItemImage *pOptionItem = MenuItemImage::create(
+            "img/main_btn_option.png",
+            "img/main_btn_option_c.png",
             this,
 			menu_selector(mainScene::menuOptionCallback));
         CC_BREAK_IF(! pOptionItem);
 
         // Place the menu item bottom-right conner.
-		pOptionItem->setPosition(ccp(size.width /2 , size.height /2.32 ));
+		pOptionItem->setPosition(Vec2(size.width /2 , size.height /2.32 ));
 
         // Create a menu with the "close" menu item, it's an auto release object.
-        CCMenu* pOptionMenu = CCMenu::create(pOptionItem, NULL);
-        pOptionMenu->setPosition(CCPointZero);
+        Menu* pOptionMenu = Menu::create(pOptionItem, NULL);
+        pOptionMenu->setPosition(Vec2());
         CC_BREAK_IF(! pOptionMenu);
 
         // Add the menu to HelloWorld layer as a child layer.
@@ -126,19 +116,19 @@ bool mainScene::init()
 		
 		//도움말 버튼
 
-		CCMenuItemImage *pHelpItem = CCMenuItemImage::create(
-            "main_btn_help.png",
-            "main_btn_help_n.png",
+		MenuItemImage *pHelpItem = MenuItemImage::create(
+            "img/main_btn_help.png",
+            "img/main_btn_help_n.png",
             this,
 			menu_selector(mainScene::menuHelpCallback));
         CC_BREAK_IF(! pHelpItem);
 
         // Place the menu item bottom-right conner.
-		pHelpItem->setPosition(ccp(size.width / 2 , size.height /3.22 ));
+		pHelpItem->setPosition(Vec2(size.width / 2 , size.height /3.22 ));
 
         // Create a menu with the "close" menu item, it's an auto release object.
-        CCMenu* pHelpMenu = CCMenu::create(pHelpItem, NULL);
-        pHelpMenu->setPosition(CCPointZero);
+        Menu* pHelpMenu = Menu::create(pHelpItem, NULL);
+        pHelpMenu->setPosition(Vec2());
         CC_BREAK_IF(! pHelpMenu);
 
         // Add the menu to HelloWorld layer as a child layer.
@@ -149,19 +139,19 @@ bool mainScene::init()
 
 		//게임시작 버튼
 
-		CCMenuItemImage *pStartItem = CCMenuItemImage::create(
-            "main_btn_gamestart.png",
-            "main_btn_gamestart_c.png",
+		MenuItemImage *pStartItem = MenuItemImage::create(
+            "img/main_btn_gamestart.png",
+            "img/main_btn_gamestart_c.png",
             this,
 			menu_selector(mainScene::menuStartCallback));
         CC_BREAK_IF(! pStartItem);
 
         // Place the menu item bottom-right conner.
-		pStartItem->setPosition(ccp(size.width /2 , size.height /1.81 ));
+		pStartItem->setPosition(Vec2(size.width /2 , size.height /1.81 ));
 
         // Create a menu with the "close" menu item, it's an auto release object.
-        CCMenu* pStartMenu = CCMenu::create(pStartItem, NULL);
-        pStartMenu->setPosition(CCPointZero);
+        Menu* pStartMenu = Menu::create(pStartItem, NULL);
+        pStartMenu->setPosition(Vec2());
         CC_BREAK_IF(! pStartMenu);
 
         // Add the menu to HelloWorld layer as a child layer.
@@ -174,30 +164,30 @@ bool mainScene::init()
     return bRet;
 }
 
-void mainScene::menuCloseCallback(CCObject* pSender)
+void mainScene::menuCloseCallback(Object* pSender)
 {
     // "close" menu item clicked
 	music m;
-	m.effectStart("sound\\effect_btn_click.mp3");
-    CCDirector::sharedDirector()->end();
+	m.effectStart("sound/effect_btn_click.mp3");
+    Director::getInstance()->end();
 }
 
-void mainScene::menuOptionCallback(CCObject* pSender)
+void mainScene::menuOptionCallback(Object* pSender)
 {
 	music m;
-	m.effectStart("sound\\effect_btn_click.mp3");
-	CCScene *pScene = OptionScene::scene();
+	m.effectStart("sound/effect_btn_click.mp3");
+	Scene *pScene = OptionScene::scene();
 
-	CCDirector::sharedDirector()->replaceScene(pScene);
+	Director::getInstance()->replaceScene(pScene);
 }
 
-void mainScene::menuHelpCallback(CCObject* pSender)
+void mainScene::menuHelpCallback(Object* pSender)
 {// pineoc's help 구현. HelpScene클래스 사용.
 	music m;
-	m.effectStart("sound\\effect_btn_click.mp3");
-	CCScene *pScene = HelpScene::scene();
+	m.effectStart("sound/effect_btn_click.mp3");
+	Scene *pScene = HelpScene::createScene();
 
-	CCDirector::sharedDirector()->pushScene(pScene);
+	Director::getInstance()->pushScene(pScene);
 
 	/*
 	CCScene* pScene = CCScene::create();
@@ -209,20 +199,20 @@ void mainScene::menuHelpCallback(CCObject* pSender)
 	
 }
 
-void mainScene::menuStartCallback(CCObject* pSender)
+void mainScene::menuStartCallback(Object* pSender)
 {
 	music m;
-	m.effectStart("sound\\effect_btn_click.mp3");
-	CCScene *pScene = BuildingScene::scene();
+	m.effectStart("sound/effect_btn_click.mp3");
+	Scene *pScene = BuildingScene::createScene();
 
-	CCDirector::sharedDirector()->replaceScene(pScene);
+	Director::getInstance()->replaceScene(pScene);
 }
 
-void mainScene::menuDevCallback(CCObject* pSender)
+void mainScene::menuDevCallback(Object* pSender)
 {
 	music m;
-	m.effectStart("sound\\effect_btn_click.mp3");
-	CCScene *pScene = MakerInfoScene::scene();
+	m.effectStart("sound/effect_btn_click.mp3");
+	Scene *pScene = MakerInfoScene::createScene();
 
-	CCDirector::sharedDirector()->pushScene(pScene);
+	Director::getInstance()->pushScene(pScene);
 }

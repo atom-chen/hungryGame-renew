@@ -9,18 +9,16 @@
 //	helpType = _helpType;
 //}
 
-CCScene* HelpScene::scene()
+Scene* HelpScene::createScene()
 {
-	CCScene * scene = NULL;
+	Scene * scene = NULL;
     do 
     {
         // 'scene' is an autorelease object
-        scene = CCScene::create();
-        CC_BREAK_IF(! scene);
+        scene = Scene::create();
 
         // 'layer' is an autorelease object
 		HelpScene *layer = HelpScene::create();
-        CC_BREAK_IF(! layer);
 
         // add layer as a child to scene
         scene->addChild(layer);
@@ -39,51 +37,50 @@ bool HelpScene::init()
         // super init first
         //////////////////////////////////////////////////////////////////////////
 
-        CC_BREAK_IF(!CCLayerColor::initWithColor(ccc4(255, 255, 255, 100)));
+        if ( !LayerColor::initWithColor(Color4B(28, 39, 43, 255)))
+        {
+            return false;
+        }
 
         //////////////////////////////////////////////////////////////////////////
         // add your codes below...
         //////////////////////////////////////////////////////////////////////////
 
-		CCSize size = CCDirector::sharedDirector()->getWinSize();
+		Size size = Director::getInstance()->getWinSize();
 		
 		/*
 		±âÁ¸ ¹è°æÈ­¸é ¼³Á¤
 		*/
-		CCSprite* phelpMainScene = CCSprite::create("help01.png");
+		Sprite* phelpMainScene = Sprite::create("help01.png");
         CC_BREAK_IF(! phelpMainScene);
 
 		//phelpMainScene->setScale(0.85);
-		phelpMainScene->setPosition(ccp(240, 1200));
+		phelpMainScene->setPosition(Vec2(240, 1200));
 
-		CCSprite* phelpMainScene2 = CCSprite::create("help02.png");
+		Sprite* phelpMainScene2 = Sprite::create("help02.png");
         CC_BREAK_IF(! phelpMainScene2);
 
 		//phelpMainScene2->setScale(0.85);
-		phelpMainScene2->setPosition(ccp(240, 400));
+		phelpMainScene2->setPosition(Vec2(240, 400));
 
-		CCLayerColor *layer = CCLayerColor::create(ccc4(255, 255, 255, 255));
-		layer->setAnchorPoint(CCPointZero);
-		layer->setPosition(ccp(0, 0));
-		layer->setContentSize(CCSizeMake(480, 1600));
+		LayerColor *layer = LayerColor::create(ccc4(255, 255, 255, 255));
+		layer->setAnchorPoint(Vec2());
+		layer->setPosition(Vec2());
+		layer->setContentSize(Size(480, 1600));
 
 		layer->addChild(phelpMainScene);
 		layer->addChild(phelpMainScene2);
 
-		scrollView = CCScrollView::create();
+		scrollView = ScrollView::create();
 		scrollView->retain();
-		scrollView->setDirection(kCCScrollViewDirectionVertical);
-		scrollView->setViewSize(CCSizeMake(480, 1600));
+        scrollView->setDirection(cocos2d::ui::ScrollView::Direction::VERTICAL);
+        scrollView->setInnerContainerSize(layer->getContentSize());
 		scrollView->setContentSize(layer->getContentSize());
-		scrollView->setPosition(ccp(0,0));
-		scrollView->setContainer(layer);
-		scrollView->setDelegate(this);
-		scrollView->setContentOffset(ccp(0, -800), false);
-		scrollView->setBounceable(true);
+		scrollView->setPosition(Vec2());
 
 		this->addChild(scrollView);
 
-		CCMenuItemImage *pCloseHelpScene = CCMenuItemImage::create(
+		MenuItemImage *pCloseHelpScene = MenuItemImage::create(
             "btn_goBack.png",
             "btn_goBack_n.png",
             this,
@@ -111,24 +108,11 @@ void HelpScene::menu_closeHelpScene(CCObject* pSender)
 
 void HelpScene::onEnter()
 {
-	CCLayer::onEnter();
-	CCDirector::sharedDirector() ->getTouchDispatcher()->addTargetedDelegate(this, 1, true);
+	Layer::onEnter();
+	//Director::getInstance()->getTouchDispatcher()->addTargetedDelegate(this, 1, true);
 }
 void HelpScene::onExit()
 {
-	CCLayer::onExit();
-	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
-}
-
-void HelpScene::scrollViewDidScroll(CCScrollView* view)
-{
-}
-
-void HelpScene::scrollViewDidZoom(CCScrollView* view)
-{
-}
-
-bool HelpScene::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent)
-{
-	return true;
+	Layer::onExit();
+	//CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
 }

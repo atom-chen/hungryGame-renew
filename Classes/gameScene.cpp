@@ -42,9 +42,9 @@ gameScene::~gameScene()
 	delete foodFollowArray;
 	this->onExit();
 }
-CCScene* gameScene::scene()
+Scene* gameScene::createScene()
 {
-	CCScene* scene = CCScene::create();
+	Scene* scene = Scene::create();
 
 	gameScene *layer = gameScene::create();
 
@@ -67,12 +67,9 @@ CCScene* gameScene::scene()
 */
 bool gameScene::init()
 {
-	if(!CCLayerColor::initWithColor(ccc4(255,255,255,255)))
+    if(!LayerColor::initWithColor(Color4B::WHITE))
 		return false;
 	gStageidx = CCUserDefault::sharedUserDefault()->getIntegerForKey("curStage");
-	//////////////////////////////////////////////////////////////////////////
-	// add your codes below...
-	//////////////////////////////////////////////////////////////////////////
 	foodSpriteArray = new CCArray; //food sprite array dynamic cast
 	foodFollowArray = new CCArray;
 	result=" ";
@@ -82,39 +79,38 @@ bool gameScene::init()
 	//using stageidx for regame
 	//set idx end. 
 	//gStageidx = stageIDX;
-	char map[16];
-	sprintf(map, "map/%d.tmx", gStageidx);
+    std::string map = StringUtils::format("map/%d.tmx", gStageidx);
 
 	music m;
-	m.effectStart("sound\\effect_supermarket.mp3");
+	m.effectStart("sound/effect_supermarket.mp3");
 
-	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	Size size = Director::getInstance()->getWinSize();
 
 	/* Set background img		: Daun */
-	CCSprite* bg = CCSprite::create("img\\game\\game_bg.png");
-	bg->setPosition(ccp(size.width/2,size.height/2));
+	Sprite* bg = Sprite::create("img/game/game_bg.png");
+	bg->setPosition(Vec2(size.width/2,size.height/2));
 	this->addChild(bg,0);
-	char stagenum[32];
-	sprintf(stagenum,"img\\game\\stageNum\\%d.png",gStageidx-9);
-	CCSprite* stageNSprite = CCSprite::create(stagenum);
-	stageNSprite->setPosition(ccp(size.width*0.32,size.height*0.93));
+    
+    std::string stagenum = StringUtils::format("img/game/stageNum/%d.png",gStageidx-9);
+	Sprite* stageNSprite = Sprite::create(stagenum);
+	stageNSprite->setPosition(Vec2(size.width*0.32,size.height*0.93));
 	this->addChild(stageNSprite,0);
 
 
 	/* Set Tiled Map			: Daun, eunji*/
-	CCLayer *tileLayer = CCLayer::create();
+	Layer *tileLayer = Layer::create();
 	this->addChild(tileLayer);
 
-	tileMap = CCTMXTiledMap::create(map);
+	tileMap = TMXTiledMap::create(map);
 	tileMap->setPosition(MOVEX , MOVEY);
-	if(tileMap->layerNamed("wall"))
-		backgroundLayer = tileMap->layerNamed("wall");
+	if(tileMap->getLayer("wall"))
+		backgroundLayer = tileMap->getLayer("wall");
 
 	//metainfo에 준 타일레이어 이름은 Items이지만 벽표시 위한 빨간레이어임.
 	// 추후 실제 아이템을 포함 할 수도 있음.
-	if(tileMap->layerNamed("Items"))
+	if(tileMap->getLayer("Items"))
 	{
-		metainfo = tileMap->layerNamed("Items");
+		metainfo = tileMap->getLayer("Items");
 		metainfo->setVisible(false); // 빨간벽을 표시안함.
 	}
 	tileLayer->addChild(tileMap);
@@ -132,8 +128,8 @@ bool gameScene::init()
 
 
 	/* set touch enable			: Daun*/
-	pDirector = CCDirector::sharedDirector();
-	pDirector->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
+	pDirector = Director::getInstance();
+	//pDirector->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
 
 
 
@@ -151,17 +147,15 @@ bool gameScene::init()
 	/* make obstacle			: eunji */
 	isPause = false;
 
-	if(tileMap->objectGroupNamed("obstacle"))
+	if(tileMap->getObjectGroup("obstacle"))
 	{
+		TMXObjectGroup *obstacle = tileMap->getObjectGroup("obstacle");
+		ValueMap obstaclePoint = obstacle->getObject("obstaclePoint");
+        obstaclePoint.at("x");
+        obX = obstaclePoint.at("x").asInt();
+		obY = obstaclePoint.at("y").asInt();;
 
-		CCTMXObjectGroup *obstacle = tileMap->objectGroupNamed("obstacle");
-		CCDictionary *obstaclePoint = obstacle->objectNamed("obstaclePoint");
-
-		obX = ((CCString*)obstaclePoint->objectForKey("x"))->intValue();
-		obY = ((CCString*)obstaclePoint->objectForKey("y"))->intValue();
-
-		obstaclePosition = ccp(obX+MOVEX, obY+MOVEY);
-
+		obstaclePosition = Vec2(obX+MOVEX, obY+MOVEY);
 
 		this->createObstacle();
 
@@ -176,13 +170,13 @@ bool gameScene::init()
 	/* make gauge				: eunji */
 	character_XP = 100;
 
-	gaugeBar = CCSprite::create("game_status_bar.png");
-	gaugeBar->setPosition(ccp(size.width*0.45, size.height*0.79));
+	gaugeBar = Sprite::create("game_status_bar.png");
+	gaugeBar->setPosition(Vec2(size.width*0.45, size.height*0.79));
 
 	tileMap->addChild(gaugeBar,2);
 
-	gaugeHeart = CCSprite::create("game_heart.png");
-	gaugeHeart->setPosition(ccp(size.width - 30, size.height*0.79));
+	gaugeHeart = Sprite::create("game_heart.png");
+	gaugeHeart->setPosition(Vec2(size.width - 30, size.height*0.79));
 
 	tileMap->addChild(gaugeHeart,3);
 
@@ -190,10 +184,10 @@ bool gameScene::init()
 
 
 	/* make pause btn			: jiyoon, daun */
-	btnPause = CCSprite::create("img/game/game_btn_pause.png");
-	btnPause->setAnchorPoint(ccp(0,0));
+	btnPause = Sprite::create("img/game/game_btn_pause.png");
+	btnPause->setAnchorPoint(Vec2(0,0));
 
-	pauseBtnPosition = ccp(size.width*0.8, size.height*0.9);
+	pauseBtnPosition = Vec2(size.width*0.8, size.height*0.9);
 	btnPause->setPosition(pauseBtnPosition);
 	this->addChild(btnPause);
 
@@ -211,63 +205,59 @@ bool gameScene::init()
 	srand(time(0));	//random
 	int kindOfItem = 4;//rand()%4 + 1;	//range : 1~4
 	item1 =NULL, item2 = NULL, item3 =NULL, item4=NULL;
-	if(tileMap->objectGroupNamed("items"))
+	if(tileMap->getObjectGroup("items"))
 	{
-		CCTMXObjectGroup *items = tileMap->objectGroupNamed("items");
-
+		TMXObjectGroup *items = tileMap->getObjectGroup("items");
 
 		//select item decided before
 		if (kindOfItem == 1)
 		{
 			//Add item1
-			CCDictionary* item1 = items->objectNamed("item1");
+			ValueMap item1 = items->getObject("item1");
 
 			//Set item's position
-			int temX = ((CCString*)item1->objectForKey("x"))->intValue();
-			int temY = ((CCString*)item1->objectForKey("y"))->intValue();
+			int temX = item1.at("x").asInt();
+			int temY = item1.at("y").asInt();
 
-			itemPosition = ccp(temX+MOVEX,temY+MOVEY);
+			itemPosition = Vec2(temX+MOVEX,temY+MOVEY);
 			this->createItem1();
-
 		}
 		else if (kindOfItem == 2)
 		{
 			//Add item2
-			CCDictionary* item2 = items->objectNamed("item2");
+			ValueMap item2 = items->getObject("item2");
 
 			//Set item's position
-			int temX = ((CCString*)item2->objectForKey("x"))->intValue();
-			int temY = ((CCString*)item2->objectForKey("y"))->intValue();
+			int temX = item2.at("x").asInt();
+			int temY = item2.at("y").asInt();
 
-			itemPosition = ccp(temX+MOVEX,temY+MOVEY);
+			itemPosition = Vec2(temX+MOVEX,temY+MOVEY);
 			this->createItem2();
-
 		}
 		else if (kindOfItem == 3)
 		{
 			//Add item3
-			CCDictionary* item3 = items->objectNamed("item3");
+			ValueMap item3 = items->getObject("item3");
 
 			//Set item's position
-			int temX = ((CCString*)item3->objectForKey("x"))->intValue();
-			int temY = ((CCString*)item3->objectForKey("y"))->intValue();
+			int temX = item3.at("x").asInt();
+			int temY = item3.at("y").asInt();
 
-			itemPosition = ccp(temX+MOVEX,temY+MOVEY);
+			itemPosition = Vec2(temX+MOVEX,temY+MOVEY);
 			this->createItem3();
 
 		}
 		else if (kindOfItem == 4)
 		{
 			//Add item4
-			CCDictionary* item4 = items->objectNamed("item4");
+			ValueMap item4 = items->getObject("item4");
 
 			//Set item's position
-			int temX = ((CCString*)item4->objectForKey("x"))->intValue();
-			int temY = ((CCString*)item4->objectForKey("y"))->intValue();
+			int temX = item4.at("x").asInt();
+			int temY = item4.at("y").asInt();
 
-			itemPosition = ccp(temX+MOVEX,temY+MOVEY);
+			itemPosition = Vec2(temX+MOVEX,temY+MOVEY);
 			this->createItem4();
-
 		}
 	}
 	this->schedule(schedule_selector(gameScene::check_item));
@@ -275,7 +265,7 @@ bool gameScene::init()
 }
 /*
 * ** FUNCTION
-* CCPoint tileCoorPosition(CCPoint)				??????????????
+* Vec2oint tileCoorPosition(Vec2oint)				??????????????
 * Input											position 
 * Output										???????
 * Date											2013. 10. 03
@@ -284,11 +274,11 @@ bool gameScene::init()
 */
 
 
-CCPoint gameScene::tileCoorPosition(CCPoint position)
+Vec2 gameScene::tileCoorPosition(Vec2 position)
 {
 	int x = position.x / tileMap->getTileSize().width;
 	int y = ((tileMap->getMapSize().height * tileMap->getTileSize().height) - position.y) / tileMap->getTileSize().height;
-	return ccp(x, y);
+	return Vec2(x, y);
 }
 
 /*
@@ -302,13 +292,12 @@ CCPoint gameScene::tileCoorPosition(CCPoint position)
 */
 void gameScene::createObstacle()
 {
-	CCTexture2D *obTexture = CCTextureCache::sharedTextureCache()->addImage("map/meat.png");
+	Texture2D *obTexture = TextureCache::sharedTextureCache()->addImage("map/meat.png");
 
-	obstacle = CCSprite::createWithTexture(obTexture,CCRectMake(0, 0, 60, 60)); // 맵에 맞춰 숫자 바꿔야함
+	obstacle = Sprite::createWithTexture(obTexture,Rect(0, 0, 60, 60)); // 맵에 맞춰 숫자 바꿔야함
 	obstacle->setPosition(obstaclePosition);
-	obstacle->setAnchorPoint(ccp(0,0));
+	obstacle->setAnchorPoint(Vec2(0,0));
 	this->addChild(obstacle);
-
 }
 
 
@@ -324,8 +313,7 @@ void gameScene::createObstacle()
 */
 void gameScene::onEnter()
 {
-	CCLayer::onEnter();
-
+	Layer::onEnter();
 }
 
 /*
@@ -339,8 +327,8 @@ void gameScene::onEnter()
 */
 void gameScene::moveCharacter(float dt)
 {
-	CCPoint playerPos = character->getPosition();
-	CCPoint originalplayerPos = character->getPosition();
+	Vec2 playerPos = character->getPosition();
+	Vec2 originalplayerPos = character->getPosition();
 	int checkCrash = nothing;
 
 
@@ -348,10 +336,10 @@ void gameScene::moveCharacter(float dt)
 	/*  check collision food and character						: Pineoc*/
 	beforeMoveCharPoint[0] = character->getPosition();
 	foodFollowCnt=1;
-	CCObject* ob = NULL;
+	Object* ob = NULL;
 	CCARRAY_FOREACH(foodFollowArray,ob)
 	{
-		CCSprite* foodFollow = dynamic_cast<CCSprite*>(ob);
+		Sprite* foodFollow = dynamic_cast<Sprite*>(ob);
 		beforeMoveCharPoint[foodFollowCnt] = foodFollow->getPosition();
 		foodFollowCnt++;
 	}
@@ -375,19 +363,20 @@ void gameScene::moveCharacter(float dt)
 		&& playerPos.x >= 0 )
 	{
 		// 캐릭터가 이동할 위치가 맵 안인경우 벽에 충돌햇는지를 검사합니다 By Daun
-		CCPoint tileCoord = this->tileCoorPosition(playerPos);
+		Vec2 tileCoord = this->tileCoorPosition(playerPos);
 
-		int tileGidforWall = this->metainfo->tileGIDAt(tileCoord);
+		int tileGidforWall = this->metainfo->getTileGIDAt(tileCoord);
+        
 
 		if(tileGidforWall)
 		{
-			CCDictionary *properties = tileMap->propertiesForGID(tileGidforWall);
+			Value properties = tileMap->getPropertiesForGID(tileGidforWall);
 
-			if(properties)
+			if(!properties.isNull())
 			{
-				CCString *wall = (CCString*)properties->objectForKey("Wall");
+                std::string wall = properties.asString();
 
-				if(wall && (wall->compare("YES") == 0))
+				if(wall.length() > 0 && (wall.compare("YES") == 0))
 				{
 					character->setPosition(playerPos);
 					checkCrash = CrashWithWall;
@@ -409,9 +398,9 @@ void gameScene::moveCharacter(float dt)
 	if(checkCrash == CrashWithWall)
 	{
 		music m;
-		m.effectStart("sound\\effect_crash_wall.mp3");
+		m.effectStart("sound/effect_crash_wall.mp3");
 
-		CCSize size = CCDirector::sharedDirector()->getWinSize();
+		Size size = Director::getInstance()->getWinSize();
 		if(isSuper==false)
 		{
 			// 벽과 충돌한 경우 해야할 일
@@ -450,7 +439,7 @@ void gameScene::moveCharacter(float dt)
 * Latest										2013. 10. 03
 * Made											Daun
 */
-bool gameScene::ccTouchBegan(CCTouch *pTouch, CCEvent* event) {	return true; }
+//bool gameScene::ccTouchBegan(CCTouch *pTouch, CCEvent* event) {	return true; }
 
 
 /*
@@ -462,43 +451,44 @@ bool gameScene::ccTouchBegan(CCTouch *pTouch, CCEvent* event) {	return true; }
 * Latest										2013. 10. 03
 * Made											Daun ,jiyoon
 */
-void gameScene::ccTouchEnded(CCTouch *pTouch, CCEvent* event)
-{
-	CCPoint playerPos = character->getPosition();
-	CCPoint touchLocation = pTouch->getLocation();
-	touchLocation = this->convertToNodeSpace(touchLocation);
 
-	CCSize size = CCDirector::sharedDirector()->getWinSize();
-
-	/* check pause btn is pressed or not	: daun */
-	CCPoint pauseDiff = ccpSub(touchLocation,pauseBtnPosition);
-	float pauseBtnWidth = size.width * 0.1;
-	float pauseBtnHeight = size.height * 0.1;
-
-	if((abs(pauseDiff.x) <= pauseBtnWidth) && (abs(pauseDiff.y) <= pauseBtnHeight))
-	{
-		music m;
-		m.effectStart("sound\\effect_btn_click.mp3");
-		this->doPop( (CCObject*)gStageidx );
-	}
-
-	originPos = character->getPosition();
-
-	/*  set moveDirection					: daun */
-	// 캐릭터를 기준으로 어느 위치를 클릭했는지에 따라 캐릭터가 이동할 방향 결정
-	CCPoint diff = ccpSub(touchLocation, playerPos);
-
-	if (abs(diff.x) > abs(diff.y))
-	{
-		if (diff.x > 0) {	if(moveDirection != LEFT) {moveDirection = RIGHT;	character->setFlipX(true);} } 
-		else			{	if(moveDirection != RIGHT) {moveDirection = LEFT;	character->setFlipX(false);} }
-	} 
-	else 
-	{
-		if (diff.y > 0) {	if(moveDirection != DOWN) moveDirection = UP;	 } 
-		else			{	if(moveDirection != UP) moveDirection = DOWN;}
-	}
-}
+//void gameScene::ccTouchEnded(Touch *pTouch, Event* event)
+//{
+//	Vec2 playerPos = character->getPosition();
+//	Vec2 touchLocation = pTouch->getLocation();
+//	touchLocation = this->convertToNodeSpace(touchLocation);
+//
+//	CCSize size = Director::getInstance()->getWinSize();
+//
+//	/* check pause btn is pressed or not	: daun */
+//	Vec2 pauseDiff = Vec2(touchLocation,pauseBtnPosition);
+//	float pauseBtnWidth = size.width * 0.1;
+//	float pauseBtnHeight = size.height * 0.1;
+//
+//	if((abs(pauseDiff.x) <= pauseBtnWidth) && (abs(pauseDiff.y) <= pauseBtnHeight))
+//	{
+//		music m;
+//		m.effectStart("sound\\effect_btn_click.mp3");
+//		this->doPop( (Object*)gStageidx );
+//	}
+//
+//	originPos = character->getPosition();
+//
+//	/*  set moveDirection					: daun */
+//	// 캐릭터를 기준으로 어느 위치를 클릭했는지에 따라 캐릭터가 이동할 방향 결정
+//	Vec2 diff = touchLocation - playerPos;
+//
+//    if (std::abs(diff.x) > std::abs(diff.y))
+//	{
+//		if (diff.x > 0) {	if(moveDirection != LEFT) {moveDirection = RIGHT;	character->setFlipX(true);} } 
+//		else			{	if(moveDirection != RIGHT) {moveDirection = LEFT;	character->setFlipX(false);} }
+//	} 
+//	else 
+//	{
+//		if (diff.y > 0) {	if(moveDirection != DOWN) moveDirection = UP;	 } 
+//		else			{	if(moveDirection != UP) moveDirection = DOWN;}
+//	}
+//}
 /*
 * ** FUNCTION
 * void createCharacter()						make character on map
@@ -511,34 +501,34 @@ void gameScene::ccTouchEnded(CCTouch *pTouch, CCEvent* event)
 void gameScene::createCharacter()
 {
 
-	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	Size size = Director::getInstance()->getWinSize();
 
 
-	CCTMXObjectGroup *object = tileMap->objectGroupNamed("object");
-	CCDictionary *spawnPoint = object->objectNamed("character");
+	TMXObjectGroup *object = tileMap->getObjectGroup("object");
+	ValueMap spawnPoint = object->getObject("character");
 
-	int x = ((CCString*)spawnPoint->objectForKey("x"))->intValue() + 1;
-	int y = ((CCString*)spawnPoint->objectForKey("y"))->intValue() + 1;
+	int x = spawnPoint.at("x").asInt() + 1;
+	int y = spawnPoint.at("y").asInt() + 1;
 
-	CCPoint characterPosition = ccp(x+MOVEX,y+MOVEY);
+	Vec2 characterPosition = Vec2(x+MOVEX,y+MOVEY);
 
 	// make charcter show in map
-	CCTexture2D *texture = CCTextureCache::sharedTextureCache()->addImage("img/character/character.png");
+	Texture2D *texture = Director::getInstance()->getTextureCache()->addImage("img/character/character.png");
 
-	CCAnimation *animation = CCAnimation::create();
+	Animation *animation = Animation::create();
 	animation->setDelayPerUnit(0.1);
 
 
-	character = CCSprite::createWithTexture(texture, CCRectMake(0,0,35,48));
-	character->setAnchorPoint(ccp(0,0));
+	character = Sprite::createWithTexture(texture, Rect(0,0,35,48));
+	character->setAnchorPoint(Vec2(0,0));
 
 	// character->setScale(0.05);
 	character->setPosition(characterPosition);
 	//character->setFlipX(true); // X축 기준으로 반전
 	//character->setFlipY(true);	// Y축 기준으로 반전
 
-	animate = CCAnimate::create(animation);
-	rep = CCRepeatForever::create(animate);
+	animate = Animate::create(animation);
+	rep = RepeatForever::create(animate);
 	character->runAction(rep);
 
 	this->addChild(character,60);
@@ -562,71 +552,66 @@ void gameScene::createFood()
 	const char* foodarr[10]={"food1","food2","food3","food4","food5","food6","food7","food8","food9","food10"};
 	//for sprite food
 
-
-
 	//create counter
-	CCTMXObjectGroup *counterGroup = tileMap->objectGroupNamed("endPoint");
-	CCDictionary *_counterPoint = counterGroup->objectNamed("counter");
-	int counterX = ((CCString*)_counterPoint->objectForKey("x"))->intValue();
-	int counterY = ((CCString*)_counterPoint->objectForKey("y"))->intValue();
-	counterPoint = ccp(counterX+MOVEX,counterY+MOVEY);
+	TMXObjectGroup *counterGroup = tileMap->getObjectGroup("endPoint");
+	ValueMap _counterPoint = counterGroup->getObject("counter");
+	int counterX = _counterPoint.at("x").asInt();
+	int counterY = _counterPoint.at("y").asInt();
+	counterPoint = Vec2(counterX+MOVEX,counterY+MOVEY);
 	this->createCounter();
 	//create counter end
 
 
 	//
-	char food_arr[20];
-	sprintf(food_arr,"/img/food/%d_f.png",gStageidx);
-	CCTexture2D *foodTexture = CCTextureCache::sharedTextureCache()->addImage(food_arr);
-	foods = tileMap->objectGroupNamed("foods");
+    std::string food_arr = StringUtils::format("/img/food/%d_f.png",gStageidx);
+    Texture2D *foodTexture = Director::getInstance()->getTextureCache()->addImage(food_arr);
+	foods = tileMap->getObjectGroup("foods");
 
 	for(int i = 0 ; i < 10; i++)
 	{
-		CCDictionary *dfoodpoint ;
-		if(!(dfoodpoint= foods->objectNamed(foodarr[i])))
+		ValueMap dfoodpoint = foods->getObject(foodarr[i]);
+        if(dfoodpoint.size()<0)
 			break;
 		//if does not have food, break
-		int foodX = ((CCString*)dfoodpoint->objectForKey("x"))->intValue();
-		int foodY = ((CCString*)dfoodpoint->objectForKey("y"))->intValue();
-		CCPoint foodpoint = ccp(foodX+MOVEX,foodY+MOVEY);
-		CCSprite* food = CCSprite::createWithTexture(foodTexture,CCRectMake(100*(i%5),100*(i/5),100,100));
+		int foodX = dfoodpoint.at("x").asInt();
+		int foodY = dfoodpoint.at("y").asInt();
+		Vec2 foodpoint = Vec2(foodX+MOVEX,foodY+MOVEY);
+		Sprite* food = Sprite::createWithTexture(foodTexture,CCRectMake(100*(i%5),100*(i/5),100,100));
 		food->setPosition(foodpoint);
 		food->setScale(0.48);
 		food->setTag(i+1);
-		food->setAnchorPoint(ccp(0,0));
+		food->setAnchorPoint(Vec2(0,0));
 		foodSpriteArray->addObject(food);
 		this->addChild(food);
 	}
-
-
 }
 
 
 /*
 * ** FUNCTION
-* bool checkDup(CCSprite*)						check duplication function
+* bool checkDup(Sprite*)						check duplication function
 * Input											Food we need to check duplication		???
 * Output										scene
 * Date											2013. 10. 03
 * Latest										2013. 10. 03
 * Made											Pineoc
 */
-bool gameScene::checkDup(CCSprite* checkfood)
+bool gameScene::checkDup(Sprite* checkfood)
 {// if dup, return false
 	//it can be useful another object.
 	int tileGid = 1;//backgroundLayer->tileGIDAt(location);
 	//int foodarrCount = foodSpriteArray->count();
-	CCRect checkfoodbounding =  checkfood->boundingBox();
+	Rect checkfoodbounding = checkfood->getBoundingBox();
 	for(int i=0;i<foodcount;i++)
 	{//check the all food object
-		CCSprite* check = (CCSprite*)foodSpriteArray->objectAtIndex(i);
-		CCRect checkbounding = check->boundingBox();
+		Sprite* check = (Sprite*)foodSpriteArray->objectAtIndex(i);
+		Rect checkbounding = check->getBoundingBox();
 		if(checkfoodbounding.intersectsRect(checkbounding))
 		{
 			return false;
 		}
 	}
-	if(tileGid == NULL)
+	if(tileGid == 0)
 		return true;
 	else
 		return false;
@@ -645,17 +630,17 @@ bool gameScene::checkDup(CCSprite* checkfood)
 */
 void gameScene::updateFoodSprte(float dt)
 {
-	CCArray* foodToDelete = new CCArray;
-	CCObject* foodobject = NULL;
-	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	Array* foodToDelete = new Array;
+	Object* foodobject = NULL;
+	Size size = Director::getInstance()->getWinSize();
 	CCARRAY_FOREACH(foodSpriteArray,foodobject)
 	{
-		CCRect characterRect = CCRectMake(character->getPosition().x - (character->getContentSize().width/2),
+		Rect characterRect = Rect(character->getPosition().x - (character->getContentSize().width/2),
 			character->getPosition().y -(character->getContentSize().height/2),
 			character->getContentSize().width,
 			character->getContentSize().height);
-		CCSprite* foodSprite = dynamic_cast<CCSprite*>(foodobject);
-		CCRect foodRect = CCRectMake(foodSprite->getPosition().x - (foodSprite->getContentSize().width/2*foodSprite->getScale()),
+		Sprite* foodSprite = dynamic_cast<Sprite*>(foodobject);
+		Rect foodRect = Rect(foodSprite->getPosition().x - (foodSprite->getContentSize().width/2*foodSprite->getScale()),
 			foodSprite->getPosition().y -(foodSprite->getContentSize().height/2*foodSprite->getScale()),
 			foodSprite->getContentSize().width*foodSprite->getScale(),
 			foodSprite->getContentSize().height*foodSprite->getScale());
@@ -668,7 +653,7 @@ void gameScene::updateFoodSprte(float dt)
 	}
 	CCARRAY_FOREACH(foodToDelete,foodobject)
 	{
-		CCSprite* delfood = dynamic_cast<CCSprite*>(foodobject);
+		Sprite* delfood = dynamic_cast<Sprite*>(foodobject);
 		foodFollowArray->addObject(delfood);
 		foodSpriteArray->removeObject(delfood);
 	}
@@ -686,16 +671,16 @@ void gameScene::updateFoodSprte(float dt)
 */
 void gameScene::checkFollowFoodCollision(float dt)
 {
-	CCObject* foodobject = NULL;
-	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	Object* foodobject = NULL;
+	Size size = Director::getInstance()->getWinSize();
 	CCARRAY_FOREACH(foodFollowArray,foodobject)
 	{
-		CCRect characterRect = CCRectMake(character->getPosition().x - (character->getContentSize().width/2),
+		Rect characterRect = Rect(character->getPosition().x - (character->getContentSize().width/2),
 			character->getPosition().y -(character->getContentSize().height/2),
 			character->getContentSize().width,
 			character->getContentSize().height);
-		CCSprite* foodSprite = dynamic_cast<CCSprite*>(foodobject);
-		CCRect foodRect = CCRectMake(foodSprite->getPosition().x - (foodSprite->getContentSize().width/2*foodSprite->getScale()),
+		Sprite* foodSprite = dynamic_cast<Sprite*>(foodobject);
+		Rect foodRect = Rect(foodSprite->getPosition().x - (foodSprite->getContentSize().width/2*foodSprite->getScale()),
 			foodSprite->getPosition().y -(foodSprite->getContentSize().height/2*foodSprite->getScale()),
 			foodSprite->getContentSize().width*foodSprite->getScale()-20,
 			foodSprite->getContentSize().height*foodSprite->getScale()-20);
@@ -720,14 +705,12 @@ void gameScene::checkFollowFoodCollision(float dt)
 */
 void gameScene::followCharacter(float dt)
 {
-	CCSprite* tmpSprite= NULL;
-	CCObject* object = NULL;
-	CCPoint tmp1=beforeMoveCharPoint[0];
-	CCPoint tmp2;
+	Vec2 tmp1=beforeMoveCharPoint[0];
+	Vec2 tmp2;
 
 	for(int i=1;i<foodFollowArray->count()+1;i++)
 	{
-		CCSprite* foodf = dynamic_cast<CCSprite*>(foodFollowArray->objectAtIndex(i-1));
+		Sprite* foodf = dynamic_cast<Sprite*>(foodFollowArray->objectAtIndex(i-1));
 		foodf->setPosition(tmp1);
 		tmp2=beforeMoveCharPoint[i];
 		tmp1=tmp2;	
@@ -744,11 +727,11 @@ void gameScene::followCharacter(float dt)
 */
 void gameScene::check_counter(float dt)
 {// check counter if crash with character and counter
-	CCRect characterRect = CCRectMake(character->getPosition().x - (character->getContentSize().width/2),
+	Rect characterRect = Rect(character->getPosition().x - (character->getContentSize().width/2),
 		character->getPosition().y -(character->getContentSize().height/2),
 		character->getContentSize().width,
 		character->getContentSize().height);
-	CCRect counterRect = CCRectMake(counter->getPosition().x - (counter->getContentSize().width/2),
+	Rect counterRect = Rect(counter->getPosition().x - (counter->getContentSize().width/2),
 		counter->getPosition().y -(counter->getContentSize().height/2),
 		counter->getContentSize().width,
 		counter->getContentSize().height);
@@ -769,15 +752,14 @@ void gameScene::check_counter(float dt)
 */
 void gameScene::createFoodShelf()
 {// have to : add food count
-	CCSize size = CCDirector::sharedDirector()->getWinSize();
-	char food_arr[20];
-	sprintf(food_arr,"/img/food/%d_f.png",gStageidx);
-	CCTexture2D *texture = CCTextureCache::sharedTextureCache()->addImage(food_arr);
+	Size size = Director::getInstance()->getWinSize();
+    std::string food_arr = StringUtils::format("/img/food/%d_f.png",gStageidx);
+    Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(food_arr);
 	for(int i=0;i<7;i++)
 	{
-		CCSprite* foodsprite = CCSprite::createWithTexture(texture,CCRectMake(100*(i%5),100*(i/5),100,100));
-		CCPoint position = ccp((size.width*0.12*(i+1)),size.height*0.73);
-		foodsprite->setAnchorPoint(ccp(0,0));
+		Sprite* foodsprite = Sprite::createWithTexture(texture,Rect(100*(i%5),100*(i/5),100,100));
+		Vec2 position = Vec2((size.width*0.12*(i+1)),size.height*0.73);
+		foodsprite->setAnchorPoint(Vec2(0,0));
 		foodsprite->setPosition(position);
 		foodsprite->setScale(0.5);
 		this->addChild(foodsprite);
@@ -797,10 +779,10 @@ void gameScene::createFoodShelf()
 */
 void gameScene::createCounter()
 {
-	CCTexture2D *counterTexture = CCTextureCache::sharedTextureCache()->addImage("map/counter.png");
-	CCSprite* _counter = CCSprite::createWithTexture(counterTexture,CCRectMake(0, 0,60,60));
+	Texture2D *counterTexture = Director::getInstance()->getTextureCache()->addImage("map/counter.png");
+	Sprite* _counter = Sprite::createWithTexture(counterTexture,Rect(0, 0,60,60));
 	_counter->setPosition(counterPoint);
-	_counter->setAnchorPoint(ccp(0,0));
+	_counter->setAnchorPoint(Vec2(0,0));
 	counter = _counter;
 	this->addChild(counter);
 }
@@ -820,11 +802,11 @@ void gameScene::go_endResultScene(int chk)
 		this->checkFoodToEnd();
 	else
 		result=" ";
-	CCScene *pScene = CCScene::create();
+	Scene *pScene = Scene::create();
 	gameResultScene *layer = new gameResultScene(result,gStageidx,foodcount);
 	layer->autorelease();
 	pScene->addChild(layer);
-	CCDirector::sharedDirector()->replaceScene(pScene);
+	Director::getInstance()->replaceScene(pScene);
 
 }
 /*
@@ -838,14 +820,13 @@ void gameScene::go_endResultScene(int chk)
 */
 void gameScene::checkFoodToEnd()
 {//string result = ?
-	char c[10]="";
+    std::string c;
 	int count = foodFollowArray->count();
 	for(int i=0;i<count;i++)
 	{
-		CCSprite* a = ((CCSprite*)foodFollowArray->objectAtIndex(i));
-		int b = a->getTag();
-		sprintf(c,"%d",b);
-		result.append((string)c+" ");
+		Sprite* a = ((Sprite*)foodFollowArray->objectAtIndex(i));
+        c = StringUtils::format("%d", a->getTag());
+        result.append((std::string)c+" ");
 	}
 }
 
@@ -861,14 +842,14 @@ void gameScene::checkFoodToEnd()
 void gameScene::goMainScene()
 {
 	this->onExit();
-	CCScene *pScene = mainScene::scene();
-	CCDirector::sharedDirector()->replaceScene(pScene);
+	Scene *pScene = mainScene::createScene();
+	Director::getInstance()->replaceScene(pScene);
 }
 void gameScene::goRegame(int stage)
 {
-	CCScene *pScene = gameScene::scene();
+	Scene *pScene = gameScene::createScene();
 
-	CCDirector::sharedDirector()->replaceScene(pScene);
+	Director::getInstance()->replaceScene(pScene);
 }
 /*
 * ** FUNCTION
@@ -881,9 +862,10 @@ void gameScene::goRegame(int stage)
 */
 void gameScene::doPop(CCObject* pSender)
 {
-	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);		//set touch enable
-	CCUserDefault::sharedUserDefault()->setIntegerForKey("curStage",gStageidx);
-	CCScene* pScene=PauseGameScene::scene();
+	//Director::sharedDirector()->getTouchDispatcher()->removeDelegate(this);		//set touch enable
+    UserDefault::getInstance()->setIntegerForKey("curStage",gStageidx);
+    UserDefault::getInstance()->flush();
+	Scene* pScene=PauseGameScene::createScene();
 	this->addChild(pScene,2000,2000);
 
 }
@@ -896,41 +878,41 @@ void gameScene::doPop(CCObject* pSender)
 * Latest										2013. 10. 03
 * Made											jiyoon
 */
-void gameScene::doNotification(CCObject *obj)
+void gameScene::doNotification(Object *obj)
 {
 	//노티피케이션 받기
-	CCString *pParam=(CCString*)obj;
+    String* pParam=(String*)obj;
 	int flag = pParam->intValue();
 	if(flag==1)
 	{
-		CCDirector::sharedDirector()->resume();														//화면 재시작
-		CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);		// set touch able
+		Director::getInstance()->resume();														//화면 재시작
+		//Director::getInstance()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);		// set touch able
 	}
 	else if(flag==2)
 	{
-		CCDirector::sharedDirector()->resume();
-		CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
+		Director::getInstance()->resume();
+		//Director::getInstance()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
 		this->goMainScene();
 	}
 	else if(flag>=10 && flag<=48)
 	{
-		CCDirector::sharedDirector()->resume();
-		CCDirector::sharedDirector()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
+		Director::getInstance()->resume();
+		//Director::getInstance()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
 		this->goRegame(flag);
 	}
 	else
 	{	
-		CCArray* childs = this->getChildren();
-		CCDirector::sharedDirector()->pause();													//화면 정지
-		CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(PauseMenu);			//메뉴버튼 비활성
+		//Array* childs = this->getChildren();
+		Director::getInstance()->pause();													//화면 정지
+		//Director::getInstance()->getTouchDispatcher()->removeDelegate(PauseMenu);			//메뉴버튼 비활성
 	}
 
 }
 
 void gameScene::onExit()
 {
-	CCLayer::onExit();
-	CCNotificationCenter::sharedNotificationCenter()->removeObserver(this, "notification");
+	Layer::onExit();
+	NotificationCenter::sharedNotificationCenter()->removeObserver(this, "notification");
 }
 
 /*
@@ -944,11 +926,11 @@ void gameScene::onExit()
 */
 void gameScene::createItem1()
 {
-	CCTexture2D *itemTexture = CCTextureCache::sharedTextureCache()->addImage("item1.png");
+	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("item1.png");
 
-	CCSprite* item = CCSprite::createWithTexture(itemTexture,CCRectMake(0, 0, 60, 60));
+	Sprite* item = Sprite::createWithTexture(itemTexture,Rect(0, 0, 60, 60));
 	item->setPosition(itemPosition);
-	item->setAnchorPoint(ccp(0,0));
+	item->setAnchorPoint(Vec2(0,0));
 	item1 = item;
 	this->addChild(item1);
 }
@@ -964,11 +946,11 @@ void gameScene::createItem1()
 */
 void gameScene::createItem2()
 {
-	CCTexture2D *itemTexture = CCTextureCache::sharedTextureCache()->addImage("item2.png");
+	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("item2.png");
 
-	CCSprite* item = CCSprite::createWithTexture(itemTexture,CCRectMake(0, 0, 60, 60));
+	Sprite* item = Sprite::createWithTexture(itemTexture,Rect(0, 0, 60, 60));
 	item->setPosition(itemPosition);
-	item->setAnchorPoint(ccp(0,0));
+	item->setAnchorPoint(Vec2(0,0));
 	item2 = item;
 	this->addChild(item2);
 }
@@ -984,11 +966,11 @@ void gameScene::createItem2()
 */
 void gameScene::createItem3()
 {
-	CCTexture2D *itemTexture = CCTextureCache::sharedTextureCache()->addImage("item3.png");
+	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("item3.png");
 
-	CCSprite* item = CCSprite::createWithTexture(itemTexture,CCRectMake(0, 0, 60, 60));
+	Sprite* item = Sprite::createWithTexture(itemTexture,Rect(0, 0, 60, 60));
 	item->setPosition(itemPosition);
-	item->setAnchorPoint(ccp(0,0));
+	item->setAnchorPoint(Vec2(0,0));
 	item3 = item;
 	this->addChild(item3);
 }
@@ -1004,11 +986,11 @@ void gameScene::createItem3()
 */
 void gameScene::createItem4()
 {
-	CCTexture2D *itemTexture = CCTextureCache::sharedTextureCache()->addImage("item4.png");
+	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("item4.png");
 
-	CCSprite* item = CCSprite::createWithTexture(itemTexture,CCRectMake(0, 0, 60, 60));
+	Sprite* item = Sprite::createWithTexture(itemTexture,Rect(0, 0, 60, 60));
 	item->setPosition(itemPosition);
-	item->setAnchorPoint(ccp(0,0));
+	item->setAnchorPoint(Vec2(0,0));
 	item4 = item;
 	this->addChild(item4);
 }
@@ -1024,35 +1006,35 @@ void gameScene::createItem4()
 void gameScene::check_item(float dt)
 {
 	//check collision - item, character
-	CCRect characterRect = CCRectMake(character->getPosition().x - (character->getContentSize().width/2),
+	Rect characterRect = Rect(character->getPosition().x - (character->getContentSize().width/2),
 		character->getPosition().y - (character->getContentSize().height/2),
 		character->getContentSize().width, character->getContentSize().height);
 
-	CCRect item1Rect;
-	CCRect item2Rect;
-	CCRect item3Rect;
-	CCRect item4Rect;
+	Rect item1Rect;
+	Rect item2Rect;
+	Rect item3Rect;
+	Rect item4Rect;
 	if(item1 !=NULL)
 	{
-		item1Rect = CCRectMake(item1->getPosition().x - (item1->getContentSize().width/2),
+		item1Rect = Rect(item1->getPosition().x - (item1->getContentSize().width/2),
 			item1->getPosition().y - (item1->getContentSize().height/2),
 			item1->getContentSize().width, item1->getContentSize().height);
 	}
 	if(item2 !=NULL)
 	{
-		item2Rect = CCRectMake(item2->getPosition().x - (item2->getContentSize().width/2),
+		item2Rect = Rect(item2->getPosition().x - (item2->getContentSize().width/2),
 			item2->getPosition().y - (item2->getContentSize().height/2),
 			item2->getContentSize().width, item2->getContentSize().height);
 	}
 	if(item3 !=NULL)
 	{
-		item3Rect = CCRectMake(item3->getPosition().x - (item3->getContentSize().width/2),
+		item3Rect = Rect(item3->getPosition().x - (item3->getContentSize().width/2),
 			item3->getPosition().y - (item3->getContentSize().height/2),
 			item3->getContentSize().width, item3->getContentSize().height);
 	}
 	if(item4 !=NULL)
 	{
-		item4Rect = CCRectMake(item4->getPosition().x - (item4->getContentSize().width/2),
+		item4Rect = Rect(item4->getPosition().x - (item4->getContentSize().width/2),
 			item4->getPosition().y - (item4->getContentSize().height/2),
 			item4->getContentSize().width, item4->getContentSize().height);
 	}
@@ -1062,7 +1044,7 @@ void gameScene::check_item(float dt)
 		//item effect - gauge up 10%
 		character_XP += 10;
 
-		CCActionInterval* gaugeUp = CCMoveBy::create(1,ccp(44.1,0));
+		ActionInterval* gaugeUp = MoveBy::create(1,Vec2(44.1,0));
 		//move by current position. +44.1(10% of the bar)
 		gaugeHeart->runAction(gaugeUp);
 		this->removeChild(item1);
@@ -1106,10 +1088,9 @@ void gameScene::check_item(float dt)
 */
 void gameScene::doParticle()
 {
-	CCParticleSystem* super = CCParticleFire::create();	//explosion particle
+	ParticleSystem* super = ParticleFire::create();	//explosion particle
 	super->retain();
-	super->setTexture(CCTextureCache::sharedTextureCache()->addImage("fire.png"));
-
+	super->setTexture(Director::getInstance()->getTextureCache()->addImage("fire.png"));
 	if(super != NULL)
 	{
 		//get current position of heart
@@ -1134,7 +1115,7 @@ void gameScene::doParticle()
 */
 void gameScene::stopObstacle()
 {
-	CCDirector::sharedDirector()->getScheduler()->pauseTarget(obstacle);
+	Director::getInstance()->getScheduler()->pauseTarget(obstacle);
 	this->schedule(schedule_selector(gameScene::countTime),1.0f);
 }
 
@@ -1173,7 +1154,7 @@ void gameScene::countTime(float d)
 void gameScene::resumeObstacle()
 {
 	isPause = false;
-	CCDirector::sharedDirector()->getScheduler()->resumeTarget(obstacle);
+	Director::getInstance()->getScheduler()->resumeTarget(obstacle);
 }
 
 //--------------jiyoon end-----------------------------------------
@@ -1196,8 +1177,8 @@ void gameScene::moveObstacleWidth(float dt)
 	{
 		checkObDirection = !(checkObDirection);
 
-		CCActionInterval* moveRight = CCMoveBy::create(1, ccp(60, 0));
-		CCActionInterval* moveLeft = CCMoveBy::create(1, ccp(-60, 0));
+		ActionInterval* moveRight = MoveBy::create(1, Vec2(60, 0));
+		ActionInterval* moveLeft = MoveBy::create(1, Vec2(-60, 0));
 
 		if     (checkObDirection == true)  {	obstacle->runAction(moveRight);}
 		else if(checkObDirection == false) {	obstacle->runAction(moveLeft); }
@@ -1215,8 +1196,8 @@ void gameScene::moveObstacleHeight(float dt)
 	{
 		checkObDirection = !(checkObDirection);
 
-		CCActionInterval* moveRight = CCMoveBy::create(1, ccp(0, 60));
-		CCActionInterval* moveLeft = CCMoveBy::create(1, ccp(0, -60));
+		ActionInterval* moveRight = MoveBy::create(1, Vec2(0, 60));
+		ActionInterval* moveLeft = MoveBy::create(1, Vec2(0, -60));
 
 		if     (checkObDirection == true)  {	obstacle->runAction(moveRight);}
 		else if(checkObDirection == false) {	obstacle->runAction(moveLeft); }
@@ -1237,9 +1218,9 @@ void gameScene::moveObstacleHeight(float dt)
 * Made											eunji
 */
 
-void gameScene::doActionMovingObstacleRight(CCObject* pSender)
+void gameScene::doActionMovingObstacleRight(Object* pSender)
 {
-	CCActionInterval* moveRight = CCMoveBy::create(2, ccp(200, 0));
+	ActionInterval* moveRight = MoveBy::create(2, Vec2(200, 0));
 
 	obstacle->runAction(moveRight);
 
@@ -1253,9 +1234,9 @@ void gameScene::doActionMovingObstacleRight(CCObject* pSender)
 * Latest										2013. 10. 03
 * Made											eunji
 */
-void gameScene::doActionMovingObstacleLeft(CCObject* pSender)
+void gameScene::doActionMovingObstacleLeft(Object* pSender)
 {
-	CCActionInterval* moveLeft = CCMoveBy::create(2, ccp(-80, 0));
+	ActionInterval* moveLeft = MoveBy::create(2, Vec2(-80, 0));
 
 	obstacle->runAction(moveLeft);
 }
@@ -1268,10 +1249,10 @@ void gameScene::doActionMovingObstacleLeft(CCObject* pSender)
 * Latest										2013. 10. 03
 * Made											eunji
 */
-void gameScene::doActionMovingObstacleReverse(CCObject* pSender)
+void gameScene::doActionMovingObstacleReverse(Object* pSender)
 {
-	CCActionInterval* moveRight = CCMoveBy::create(2, ccp(80, 0));
-	CCActionInterval* moveReverse = moveRight->reverse();
+	ActionInterval* moveRight = MoveBy::create(2, Vec2(80, 0));
+	ActionInterval* moveReverse = moveRight->reverse();
 
 	obstacle->runAction(moveReverse);
 }
@@ -1289,7 +1270,7 @@ void gameScene::doActionMovingObstacleReverse(CCObject* pSender)
 void gameScene::decreaseGaugeBar(int num)
 {
 	//x = 20 은 초기상태(에너지가 0인 상태)
-	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	Size size = Director::getInstance()->getWinSize();
 
 	if( character_XP > 0 )
 	{
@@ -1317,7 +1298,7 @@ void gameScene::decreaseGaugeBar(int num)
 void gameScene::increaseGaugeBar(int num)
 {
 	//x = 20 은 초기상태(에너지가 0인 상태)
-	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	Size size = Director::getInstance()->getWinSize();
 
 	if( character_XP < (460 - num) )
 	{

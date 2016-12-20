@@ -4,9 +4,9 @@
 
 using namespace cocos2d;
 
-CCScene* PauseGameScene::scene()
+Scene* PauseGameScene::createScene()
 {
-	CCScene* scene = CCScene::create();
+	Scene* scene = Scene::create();
 
 	PauseGameScene *layer = PauseGameScene::create();
 
@@ -17,51 +17,51 @@ CCScene* PauseGameScene::scene()
 
 bool PauseGameScene::init()
 {
-	if( !CCLayerColor::initWithColor(ccc4(0,0,0,0)))
+	if( !LayerColor::initWithColor(Color4B(0,0,0,0)))
 	{ return false; }
-	pStageidx=CCUserDefault::sharedUserDefault()->getIntegerForKey("curStage");
+	pStageidx=UserDefault::getInstance()->getIntegerForKey("curStage");
 
 
-	CCString* popParam=CCString::create("0");
-	CCNotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
+	String* popParam=String::create("0");
+	NotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
 
-	winSize=CCDirector::sharedDirector()->getWinSize();
+	winSize=Director::getInstance()->getWinSize();
 
-	CCSprite *bg = CCSprite::create("img\\pause\\pause_bg.png");
+	CCSprite *bg = Sprite::create("img/pause/pause_bg.png");
 	bg->setScale(0.5);
-	bg->setPosition(ccp(winSize.width/2,winSize.height/2));
+	bg->setPosition(Vec2(winSize.width/2,winSize.height/2));
 	this->addChild(bg,0);
 	
 	//메뉴추가
-	CCMenuItemImage* pMain = CCMenuItemImage::create(
-		"img\\pause\\pause_btn_goMain.png","img\\pause\\pause_btn_goMain_n.png", this, menu_selector(PauseGameScene::goMain));
+	MenuItemImage* pMain = MenuItemImage::create(
+		"img/pause/pause_btn_goMain.png","img/pause/pause_btn_goMain_n.png", this, menu_selector(PauseGameScene::goMain));
 	pMain->setScale(0.5);
-	CCMenuItemImage* pHelp = CCMenuItemImage::create(
-		"img\\pause\\pause_btn_help.png","img\\pause\\pause_btn_help_n.png",this,menu_selector(PauseGameScene::goHelp));
+	MenuItemImage* pHelp = MenuItemImage::create(
+		"img/pause/pause_btn_help.png","img/pause/pause_btn_help_n.png",this,menu_selector(PauseGameScene::goHelp));
 	pHelp->setScale(0.5);
-	CCMenuItemImage* pGame = CCMenuItemImage::create(
-		"img\\pause\\pause_btn_restart.png","img\\pause\\pause_btn_restart_n.png", this, menu_selector(PauseGameScene::newGame));
+	MenuItemImage* pGame = MenuItemImage::create(
+		"img/pause/pause_btn_restart.png","img/pause/pause_btn_restart_n.png", this, menu_selector(PauseGameScene::newGame));
 	pGame->setScale(0.5);
-	CCMenuItemImage* pClose = CCMenuItemImage::create(
-		"img\\pause\\pause_btn_continue.png","img\\pause\\pause_btn_continue.png", this, menu_selector(PauseGameScene::doClose));
+	MenuItemImage* pClose = MenuItemImage::create(
+		"img/pause/pause_btn_continue.png","img/pause/pause_btn_continue.png", this, menu_selector(PauseGameScene::doClose));
 	pClose->setScale(0.5);
 
 	//메뉴생성
-	CCMenu* pauseMenu=CCMenu::create(pMain, pGame, pHelp, pClose, NULL);
-	pauseMenu->setPosition(ccp(240, 450));
+	Menu* pauseMenu=Menu::create(pMain, pGame, pHelp, pClose, NULL);
+	pauseMenu->setPosition(Vec2(240, 450));
 	pauseMenu->alignItemsVertically();
 	this->addChild(pauseMenu,10);
 
 	//backLayer추가
-	backLayer=CCLayerColor::create(ccc4(0,0,0,0), winSize.width, winSize.height);
-	backLayer->setAnchorPoint(ccp(0,0));
-	backLayer->setPosition(ccp(0,0));
+    backLayer=LayerColor::create(Color4B(0,0,0,0), winSize.width, winSize.height);
+	backLayer->setAnchorPoint(Vec2());
+	backLayer->setPosition(Vec2());
 	this->addChild(backLayer);
 
 	//popUpLayer추가
-	popUpLayer=CCLayerColor::create(ccc4(0,0,0,0), 250,150);
-	popUpLayer->setAnchorPoint(ccp(0,0));
-	popUpLayer->setPosition(ccp((winSize.width-popUpLayer->getContentSize().width)/2, 
+	popUpLayer=LayerColor::create(Color4B(0,0,0,0), 250,150);
+	popUpLayer->setAnchorPoint(Vec2(0,0));
+	popUpLayer->setPosition(Vec2((winSize.width-popUpLayer->getContentSize().width)/2,
 				(winSize.height-popUpLayer->getContentSize().height)/2   )  );
 	this->addChild(popUpLayer);
 
@@ -69,35 +69,32 @@ bool PauseGameScene::init()
 }
 
 
-void PauseGameScene::goMain( CCObject* pSender )
+void PauseGameScene::goMain( Object* pSender )
 {
 	//처음 메인화면으로
 	/*CCScene *pScene = Main::scene();
 
-	CCDirector::sharedDirector()->pushScene(pScene);*/
-	CCString* popParam=CCString::create("2");
-	CCNotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
+	Director::sharedDirector()->pushScene(pScene);*/
+	String* popParam=String::create("2");
+	NotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
 	this->removeFromParentAndCleanup(true);
 }
 
-void PauseGameScene::goHelp( CCObject* pSender )
+void PauseGameScene::goHelp( Object* pSender )
 {
 	//도움말 화면으로
-	CCScene *pScene = HelpScene::scene();
+	Scene *pScene = HelpScene::createScene();
 
-	CCDirector::sharedDirector()->pushScene(pScene);
+	Director::getInstance()->pushScene(pScene);
 	
 }
 
-void PauseGameScene::newGame( CCObject* pSender )
+void PauseGameScene::newGame( Object* pSender )
 {
 	//게임화면 초기화
-	char buf[16];
-	string a;
-	sprintf(buf,"%d",pStageidx);
-	a = string(buf);
-	CCString* popParam=CCString::create(a);
-	CCNotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
+    std::string a = StringUtils::format("%d", pStageidx);
+	String* popParam=String::create(a);
+	NotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
 	this->removeFromParentAndCleanup(true);
 
 }
@@ -105,8 +102,8 @@ void PauseGameScene::newGame( CCObject* pSender )
 void PauseGameScene::doClose(CCObject* pSender)
 {
 	//팝업창 닫고 게임 이어하기
-	CCString* popParam=CCString::create("1");
-	CCNotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
+	String* popParam=String::create("1");
+	NotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
 	this->removeFromParentAndCleanup(true);		//팝업창 제거
 
 }

@@ -2,9 +2,9 @@
 
 using namespace cocos2d;
 
-CCScene* MakerInfoScene::scene()
+Scene* MakerInfoScene::createScene()
 {
-	CCScene *scene = CCScene::create();
+	Scene *scene = Scene::create();
 
 	MakerInfoScene *layer = MakerInfoScene::create();
 
@@ -18,24 +18,24 @@ bool MakerInfoScene::init()
 	bool bRet = false;
 	do 
 	{
-		CC_BREAK_IF(!CCLayerColor::initWithColor(ccc4(255,255,255,100)));
+        CC_BREAK_IF(!LayerColor::initWithColor(Color4B::WHITE));
 
 		//위도우 사이즈
-		winSize = CCDirector::sharedDirector()->getWinSize();
+		winSize = Director::getInstance()->getWinSize();
 
 		//Info창 레이어 추가
-		pInfo = CCSprite::create("devinfoScene_bg.png");
+		pInfo = Sprite::create("devinfoScene_bg.png");
 		CC_BREAK_IF(!pInfo);
-		pInfo->setPosition(ccp(winSize.width/2,winSize.height/2));
+		pInfo->setPosition(Vec2(winSize.width/2,winSize.height/2));
 		this->addChild(pInfo);
 
 		//닫기버튼
-		CCMenuItemImage *pClose = CCMenuItemImage::create(
+		MenuItemImage *pClose = MenuItemImage::create(
 			"btn_goBack.png","btn_goBack_n.png",this,menu_selector(MakerInfoScene::doClose));
 		CC_BREAK_IF(!pClose);
-		pClose->setPosition(ccp(winSize.width / 1.35 , winSize.height /14.23)); 
-		CCMenu* pMenu = CCMenu::create(pClose,NULL);
-		pMenu->setPosition(CCPointZero);
+		pClose->setPosition(Vec2(winSize.width / 1.35 , winSize.height /14.23));
+		Menu* pMenu = Menu::create(pClose,NULL);
+		pMenu->setPosition(Vec2());
 		this->addChild(pMenu);
 
 		bRet = true;
@@ -44,8 +44,8 @@ bool MakerInfoScene::init()
 }
 
 
-void MakerInfoScene::doClose( CCObject* pSender )
+void MakerInfoScene::doClose( Object* pSender )
 {
 	//장면닫음
-	CCDirector::sharedDirector()->popScene();
+	Director::getInstance()->popScene();
 }

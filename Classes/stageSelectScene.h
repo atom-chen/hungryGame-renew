@@ -6,10 +6,9 @@
 * Stage Select
 */
 #include "cocos2d.h"
-
-#include "Box2D/Box2D.h"
-
 #include "SimpleAudioEngine.h"
+
+using namespace cocos2d;
 
 class stageSelectScene : public cocos2d::CCLayer
 {
@@ -18,14 +17,14 @@ public:
     virtual bool init();  
 
     // there's no 'id' in cpp, so we recommand to return the exactly class pointer
-    static cocos2d::CCScene* scene();
+    static cocos2d::Scene* createScene();
     
    
-	void stageMenu(CCObject* pSender);
-	void menuGoBackCallback(CCObject* pSender);
+	void stageMenu(Object* pSender);
+	void menuGoBackCallback(Object* pSender);
 	void onExit();
 	void goStageScene();
-	void doMsgRecv(CCObject* obj);
+	void doMsgRecv(Object* obj);
 	int sStageNum; // for stage of each building
 	int buildingNum;
     // implement the "static node()" method manually
