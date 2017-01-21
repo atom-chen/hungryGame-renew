@@ -12,19 +12,18 @@ gameResultScene::gameResultScene(std::string _result,int _stageidx,int _count)
 
 bool gameResultScene::init()
 {
-	if(!CCLayerColor::initWithColor(ccc4(255,255,255,255)))
+	if(!CCLayerColor::initWithColor(Color4B::WHITE))
 		return false;
 	
-	CCSize size = CCDirector::sharedDirector()->getWinSize();
+	Size size = Director::getInstance()->getWinSize();
 
-	CCSprite* background = CCSprite::create("img\\endResult\\end_bg.png");
-	background->setPosition(ccp(size.width/2,size.height/2));
+	Sprite* background = Sprite::create("img/endResult/end_bg.png");
+	background->setPosition(Vec2(size.width/2,size.height/2));
 	this->addChild(background,0);
 
-	char stagenum[32];
-	sprintf(stagenum,"img\\game\\stageNum\\%d.png",stageidx-9);
-	CCSprite* stageNSprite = CCSprite::create(stagenum);
-	stageNSprite->setPosition(ccp(size.width*0.32,size.height*0.93));
+	std::string stageNum = StringUtils::format("img/game/stageNum/%d.png",stageidx-9);
+	Sprite* stageNSprite = Sprite::create(stageNum);
+	stageNSprite->setPosition(Vec2(size.width*0.32,size.height*0.93));
 	this->addChild(stageNSprite,0);
 
 	CCMenuItemImage *btnEnd = CCMenuItemImage::create(
@@ -82,20 +81,19 @@ void gameResultScene::make_foodSprite()
 		이미지 뿌리는 부분...
 		**/
 
-		CCPoint position = ccp(winSize.width*x,winSize.height*y);
-		char food_arr[20];
-		sprintf(food_arr,"/img/food/%d_f.png",stageidx);
-		CCTexture2D *texture = CCTextureCache::sharedTextureCache()->addImage(food_arr);
-		CCSprite* foodsprite = CCSprite::createWithTexture(texture,CCRectMake(100*(i%5),100*(i/5),100,100));
+		Vec2 position = Vec2(winSize.width*x,winSize.height*y);
+		std::string food_arr = StringUtils::format("img/food/%d_f.png",stageidx);
+		Texture2D *texture = TextureCache::sharedTextureCache()->addImage(food_arr);
+		Sprite* foodsprite = Sprite::createWithTexture(texture,CCRectMake(100*(i%5),100*(i/5),100,100));
 
-		foodsprite->setAnchorPoint(ccp(0,0));
+		foodsprite->setAnchorPoint(Vec2(0,0));
 		foodsprite->setPosition(position);
 
 		if(check_arr[i+1] == 1) {
 			//빨간 동그라미 그리기
-			CCSprite* check = CCSprite::create("img/endResult/end_redCircle.png");
+			Sprite* check = Sprite::create("img/endResult/end_redCircle.png");
 			check->setPosition(position);
-			check->setAnchorPoint(ccp(0,0));
+			check->setAnchorPoint(Vec2(0,0));
 			this->addChild(check,2);
 			successCnt++;
 		}
@@ -109,11 +107,11 @@ void gameResultScene::make_foodSprite()
 		} else resultOfStage = 0;
 }
 
-void gameResultScene::menu_goEndScene(CCObject* pSender)
+void gameResultScene::menu_goEndScene(Object* pSender)
 {
-	CCScene *pScene = CCScene::create();
+	Scene *pScene = Scene::create();
 	gameEndScene *layer = new gameEndScene(resultOfStage,stageidx);
 	layer->autorelease();
 	pScene->addChild(layer);
-	CCDirector::sharedDirector()->replaceScene(pScene);
+	Director::getInstance()->replaceScene(pScene);
 }

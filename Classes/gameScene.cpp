@@ -18,15 +18,6 @@ enum DIRCTION { UP, DOWN, LEFT, RIGHT};
 #define MOVEY 46.5
 
 
-//gameScene::gameScene(int stageIDX)
-//{
-//	//////////////////////////////////////////////////////////////////////////
-//	// super init first
-//	//////////////////////////////////////////////////////////////////////////
-//	gStageidx = stageIDX;
-//	init();
-//}
-
 /*
 * ** DESTRUCTURE
 * ~gameScene()									destructure about gameScene class
@@ -560,7 +551,7 @@ void gameScene::createFood()
 
 
 	//
-    std::string food_arr = StringUtils::format("/img/food/%d_f.png",gStageidx);
+    std::string food_arr = StringUtils::format("img/food/%d_f.png",gStageidx);
     Texture2D *foodTexture = Director::getInstance()->getTextureCache()->addImage(food_arr);
 	foods = tileMap->getObjectGroup("foods");
 
@@ -750,7 +741,7 @@ void gameScene::check_counter(float dt)
 void gameScene::createFoodShelf()
 {// have to : add food count
 	Size size = Director::getInstance()->getWinSize();
-    std::string food_arr = StringUtils::format("/img/food/%d_f.png",gStageidx);
+    std::string food_arr = StringUtils::format("img/food/%d_f.png",gStageidx);
     Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(food_arr);
 	for(int i=0;i<7;i++)
 	{

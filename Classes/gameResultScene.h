@@ -12,7 +12,7 @@ public:
 //	void check_food();
 	void make_foodSprite();
 
-	void menu_goEndScene(CCObject*);
+	void menu_goEndScene(Object*);
 
 //	void selectionSort(int*,int);
 //	bool checkSame(int*,int*);
