@@ -31,10 +31,7 @@ public:
 	void bgRestart();
 
 	void effectStart(char *);
-
-
-
-
+	
 	void setEffectSoundVolume(int);
 	int getEffectSoundVolume();
 	

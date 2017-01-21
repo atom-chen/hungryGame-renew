@@ -69,9 +69,9 @@ bool gameScene::init()
 {
     if(!LayerColor::initWithColor(Color4B::WHITE))
 		return false;
-	gStageidx = CCUserDefault::sharedUserDefault()->getIntegerForKey("curStage");
-	foodSpriteArray = new CCArray; //food sprite array dynamic cast
-	foodFollowArray = new CCArray;
+	gStageidx = UserDefault::getInstance()->getIntegerForKey("curStage");
+	foodSpriteArray = new Array; //food sprite array dynamic cast
+	foodFollowArray = new Array;
 	result=" ";
 	isSuper = false;
 	
@@ -129,9 +129,6 @@ bool gameScene::init()
 
 	/* set touch enable			: Daun*/
 	pDirector = Director::getInstance();
-	//pDirector->getTouchDispatcher()->addTargetedDelegate(this, 0, true);
-
-
 
 	/* make food				: Pineoc */
 	
@@ -170,12 +167,12 @@ bool gameScene::init()
 	/* make gauge				: eunji */
 	character_XP = 100;
 
-	gaugeBar = Sprite::create("game_status_bar.png");
+	gaugeBar = Sprite::create("img/game/game_status_bar.png");
 	gaugeBar->setPosition(Vec2(size.width*0.45, size.height*0.79));
 
 	tileMap->addChild(gaugeBar,2);
 
-	gaugeHeart = Sprite::create("game_heart.png");
+	gaugeHeart = Sprite::create("img/game/game_heart.png");
 	gaugeHeart->setPosition(Vec2(size.width - 30, size.height*0.79));
 
 	tileMap->addChild(gaugeHeart,3);
@@ -926,7 +923,7 @@ void gameScene::onExit()
 */
 void gameScene::createItem1()
 {
-	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("item1.png");
+	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("img/item1.png");
 
 	Sprite* item = Sprite::createWithTexture(itemTexture,Rect(0, 0, 60, 60));
 	item->setPosition(itemPosition);
@@ -946,7 +943,7 @@ void gameScene::createItem1()
 */
 void gameScene::createItem2()
 {
-	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("item2.png");
+	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("img/item2.png");
 
 	Sprite* item = Sprite::createWithTexture(itemTexture,Rect(0, 0, 60, 60));
 	item->setPosition(itemPosition);
@@ -966,7 +963,7 @@ void gameScene::createItem2()
 */
 void gameScene::createItem3()
 {
-	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("item3.png");
+	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("img/item3.png");
 
 	Sprite* item = Sprite::createWithTexture(itemTexture,Rect(0, 0, 60, 60));
 	item->setPosition(itemPosition);
@@ -986,7 +983,7 @@ void gameScene::createItem3()
 */
 void gameScene::createItem4()
 {
-	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("item4.png");
+	Texture2D *itemTexture = Director::getInstance()->getTextureCache()->addImage("img/item4.png");
 
 	Sprite* item = Sprite::createWithTexture(itemTexture,Rect(0, 0, 60, 60));
 	item->setPosition(itemPosition);
@@ -1090,7 +1087,7 @@ void gameScene::doParticle()
 {
 	ParticleSystem* super = ParticleFire::create();	//explosion particle
 	super->retain();
-	super->setTexture(Director::getInstance()->getTextureCache()->addImage("fire.png"));
+	super->setTexture(Director::getInstance()->getTextureCache()->addImage("img/fire.png"));
 	if(super != NULL)
 	{
 		//get current position of heart

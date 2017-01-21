@@ -92,7 +92,7 @@ public:
 
 	/*												: pineoc */
 	TMXObjectGroup *				foods;							// group for foods object
-	CCArray*						onCheckFoodDisplay;				// 위에 음식을 먹었는지 안먹었는지 체크할 배열,	
+	Array*						onCheckFoodDisplay;				// 위에 음식을 먹었는지 안먹었는지 체크할 배열,	
 	void createFood();												//food create item, (point, imageName)
 	bool checkDup(Sprite*);										// check duplication about tile
 	void updateFoodSprte(float dt);
