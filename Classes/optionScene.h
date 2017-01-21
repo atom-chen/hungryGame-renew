@@ -13,7 +13,7 @@
 #include "userData.h"
 
 
-class OptionScene : public CCLayerColor
+class OptionScene : public LayerColor
 {
 public:
 	
@@ -21,12 +21,11 @@ public:
     virtual bool init();  
 
     // there's no 'id' in cpp, so we recommand to return the exactly class pointer
-    static cocos2d::CCScene* scene();
+    static cocos2d::Scene* scene();
 
-	void goBackMenu(CCObject*); // go back to menu
+	void goBackMenu(Object*); // go back to menu
 
-	void OnOffMenu(CCObject*);	// set Music ON or OFF
-
+	void OnOffMenu(Object*);	// set Music ON or OFF
 
 	CREATE_FUNC(OptionScene);
 

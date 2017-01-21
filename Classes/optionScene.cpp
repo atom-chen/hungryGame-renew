@@ -31,115 +31,88 @@ CCScene* OptionScene::scene()
 
 bool OptionScene::init()
 {
-	bool bRet = false;
-    do 
-    {
-        //////////////////////////////////////////////////////////////////////////
-        // super init first
-        //////////////////////////////////////////////////////////////////////////
+        if(!LayerColor::initWithColor(Color4B::WHITE))
+        {
+        	return false;
+        }
 
-        CC_BREAK_IF(!CCLayerColor::initWithColor(ccc4(255, 255, 255, 100)));
-
-        //////////////////////////////////////////////////////////////////////////
-        // add your codes below...
-        //////////////////////////////////////////////////////////////////////////
-
-		CCSize size = CCDirector::sharedDirector()->getWinSize();
+		Size size = Director::getInstance()->getWinSize();
 		
-		/*
-		background img
-		*/
-		CCSprite* phelpMainScene = CCSprite::create("img\\option\\option_bg.png");
-        CC_BREAK_IF(! phelpMainScene);
-		phelpMainScene->setPosition(ccp(size.width/2,size.height/2));
+		Sprite* phelpMainScene = Sprite::create("img/option/option_bg.png");
+		phelpMainScene->setPosition(Vec2(size.width/2,size.height/2));
+		phelpMainScene->setScale(size.width/phelpMainScene->getContentSize().width);
 		this->addChild(phelpMainScene,0);
 
-
-		/*
-		* Add Buttons
-		*/
-
-		CCMenuItemImage *pBGON = CCMenuItemImage::create(
-			"img\\option\\option_btn_on.png",
-			"img\\option\\option_btn_on_n.png",
+		MenuItemImage *pBGON = MenuItemImage::create(
+			"img/option/option_btn_on.png",
+			"img/option/option_btn_on_n.png",
 			this,
 			menu_selector(OptionScene::OnOffMenu));
-		CC_BREAK_IF(!pBGON);
 
 		pBGON->setPosition(ccp(size.width * 0.6, size.height * 0.6));
 		pBGON->setTag(bgOn);
 
-		CCMenuItemImage *pBGOFF = CCMenuItemImage::create(
-			"img\\option\\option_btn_off.png",
-			"img\\option\\option_btn_off_n.png",
+		MenuItemImage *pBGOFF = MenuItemImage::create(
+			"img/option/option_btn_off.png",
+			"img/option/option_btn_off_n.png",
 			this,
 			menu_selector(OptionScene::OnOffMenu));
-		CC_BREAK_IF(!pBGOFF);
 
 		pBGOFF->setPosition(ccp(size.width * 0.8, size.height * 0.6));
 		pBGOFF->setTag(bgOff);
 
-
-
-		CCMenuItemImage *pEffectOn = CCMenuItemImage::create(
-			"img\\option\\option_btn_on.png",
-			"img\\option\\option_btn_on_n.png",
+		MenuItemImage *pEffectOn = MenuItemImage::create(
+			"img/option/option_btn_on.png",
+			"img/option/option_btn_on_n.png",
 			this,
 			menu_selector(OptionScene::OnOffMenu));
-		CC_BREAK_IF(!pEffectOn);
 
-		pEffectOn->setPosition(ccp(size.width * 0.6, size.height * 0.4));
+		pEffectOn->setPosition(Vec2(size.width * 0.6, size.height * 0.4));
 		pEffectOn->setTag(effectOn);
 
-		CCMenuItemImage *pEffectOff = CCMenuItemImage::create(
-			"img\\option\\option_btn_off.png",
-			"img\\option\\option_btn_off_n.png",
+		MenuItemImage *pEffectOff = MenuItemImage::create(
+			"img/option/option_btn_off.png",
+			"img/option/option_btn_off_n.png",
 			this,
 			menu_selector(OptionScene::OnOffMenu));
-		CC_BREAK_IF(!pEffectOff);
 
-		pEffectOff->setPosition(ccp(size.width * 0.8, size.height * 0.4));
+		pEffectOff->setPosition(Vec2(size.width * 0.8, size.height * 0.4));
 		pEffectOff->setTag(effectOff);
 
 
-		CCMenu *pONOFFMenu = CCMenu::create(pBGON, pBGOFF, pEffectOn, pEffectOff,NULL);
+		Menu *pONOFFMenu = Menu::create(pBGON, pBGOFF, pEffectOn, pEffectOff,NULL);
 		pONOFFMenu->setPosition(CCPointZero);
 		this->addChild(pONOFFMenu,1);
 
 		/*
 		Goback btn
 		*/
-		CCMenuItemImage *pCloseScene = CCMenuItemImage::create(
-            "btn_goBack.png",
-            "btn_goBack_n.png",
+		MenuItemImage *pCloseScene = MenuItemImage::create(
+            "img/btn_goBack.png",
+            "img/btn_goBack_n.png",
             this,
 			menu_selector(OptionScene::goBackMenu));
-        CC_BREAK_IF(! pCloseScene);
 
         // Place the menu item bottom-right conner.
-		pCloseScene->setPosition(ccp(size.width / 1.25 , size.height /14.28 ));
+		pCloseScene->setPosition(Vec2(size.width / 1.25 , size.height /14.28 ));
 		
-		CCMenu* pCloseMenu = CCMenu::create(pCloseScene,NULL);
+		Menu* pCloseMenu = Menu::create(pCloseScene,NULL);
 		pCloseMenu->setPosition(CCPointZero);
 		this->addChild(pCloseMenu,1);
-
-        bRet = true;
-    } while (0);
 
 	return true;
 }
 
-void OptionScene::goBackMenu(CCObject* pSender)
+void OptionScene::goBackMenu(Object* pSender)
 { // 도움말창을 닫음
 	Scene *pScene = mainScene::createScene();
 	Director::getInstance()->replaceScene(pScene);
-	
 }
 
-void OptionScene::OnOffMenu(CCObject* pSender)
+void OptionScene::OnOffMenu(Object* pSender)
 {
 	// set fuction to on off buttons
-	CCMenuItem *pGet = (CCMenuItem *)pSender;
+	MenuItem *pGet = (MenuItem *)pSender;
 	music m;
 	switch(pGet->getTag())
 	{

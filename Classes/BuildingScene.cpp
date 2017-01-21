@@ -12,19 +12,14 @@ using namespace cocos2d;
 Scene* BuildingScene::createScene()
 {
     Scene * scene = NULL;
-    do 
-    {
-        // 'scene' is an autorelease object
-        scene = Scene::create();
-        CC_BREAK_IF(! scene);
+    // 'scene' is an autorelease object
+    scene = Scene::create();
 
-        // 'layer' is an autorelease object
-		BuildingScene *layer = BuildingScene::create();
-        CC_BREAK_IF(! layer);
+    // 'layer' is an autorelease object
+	BuildingScene *layer = BuildingScene::create();
 
-        // add layer as a child to scene
-        scene->addChild(layer);
-    } while (0);
+    // add layer as a child to scene
+    scene->addChild(layer);
 
     // return the scene
     return scene;
@@ -33,20 +28,19 @@ Scene* BuildingScene::createScene()
 // on "init" you need to initialize your instance
 bool BuildingScene::init()
 {
-    bool bRet = false;
-    do 
-    {
-        CC_BREAK_IF(! Layer::init());
+        if(! Layer::init())
+        {
+            return false;
+        }
+
 		Size size = Director::getInstance()->getWinSize();
 
-		buildingNum = 0;
-
-		
-		Sprite* pBuildingBg = Sprite::create("buildingSelect_bg.png");
-        CC_BREAK_IF(! pBuildingBg);
+		buildingNum = 0;		
+		Sprite* pBuildingBg = Sprite::create("img/buildingSelect_bg.png");
 
         // Place the sprite on the center of the screen
         pBuildingBg->setPosition(Vec2(size.width/2, size.height/2));
+        pBuildingBg->setScale(size.width/pBuildingBg->getContentSize().width);
 
         // Add the sprite to HelloWorld layer as a child layer.
         this->addChild(pBuildingBg, 0);
@@ -54,11 +48,10 @@ bool BuildingScene::init()
 
 		//첫번째 건물버튼
         MenuItemImage *pBuilding_1 = MenuItemImage::create(
-            "buildingSelect_btn_b1.png",
-            "buildingSelect_btn_b1_n.png",
+            "img/buildingSelect_btn_b1.png",
+            "img/buildingSelect_btn_b1_n.png",
             this,
 			menu_selector(BuildingScene::menuBuild1Callback));
-        CC_BREAK_IF(! pBuilding_1);
 
         // Place the menu item bottom-right conner.
 		pBuilding_1->setPosition(Vec2(size.width/3.33, size.height/1.53));
@@ -70,11 +63,10 @@ bool BuildingScene::init()
         // Add the menu to HelloWorld layer as a child layer.
         this->addChild(pMenu1, 1);
 
-
 		//두번째 건물버튼
         MenuItemImage *pBuilding_2 = MenuItemImage::create(
-            "buildingSelect_btn_b2.png",
-            "buildingSelect_btn_b2_n.png",
+            "img/buildingSelect_btn_b2.png",
+            "img/buildingSelect_btn_b2_n.png",
             this,
 			menu_selector(BuildingScene::menuBuild2Callback));
 
@@ -91,8 +83,8 @@ bool BuildingScene::init()
 
 		
         MenuItemImage *pBuilding_3 = MenuItemImage::create(
-            "buildingSelect_btn_b3.png",
-            "buildingSelect_btn_b3_n.png",
+            "img/buildingSelect_btn_b3.png",
+            "img/buildingSelect_btn_b3_n.png",
             this,
 			menu_selector(BuildingScene::menuBuild3Callback));
 
@@ -109,8 +101,8 @@ bool BuildingScene::init()
 
 		//네번째 건물버튼
         MenuItemImage *pBuilding_4 = MenuItemImage::create(
-            "buildingSelect_btn_b4.png",
-            "buildingSelect_btn_b4_n.png",
+            "img/buildingSelect_btn_b4.png",
+            "img/buildingSelect_btn_b4_n.png",
             this,
 			menu_selector(BuildingScene::menuBuild4Callback));
 
@@ -125,8 +117,8 @@ bool BuildingScene::init()
 
 		//되돌아가기 버튼
         MenuItemImage *pGoBack = MenuItemImage::create(
-            "btn_goBack.png",
-            "btn_goBack_n.png",
+            "img/btn_goBack.png",
+            "img/btn_goBack_n.png",
             this,
 			menu_selector(BuildingScene::menuGoBackCallback));
 
@@ -139,12 +131,8 @@ bool BuildingScene::init()
 
         // Add the menu to HelloWorld layer as a child layer.
         this->addChild(pMenu5, 1);
-
-
-        bRet = true;
-    } while (0);
-
-    return bRet;
+        
+    return true;
 }
 
 // 첫번째 빌딩
@@ -167,7 +155,7 @@ void BuildingScene::menuBuild2Callback(Object* pSender)
 {
 	music m;
 	char buf[4];
-	m.effectStart("sound\\effect_btn_click.mp3");
+	m.effectStart("sound/tn_click.mp3");
 	CCScene *pScene = stageSelectScene::createScene();
 	buildingNum = 20;
 	sprintf(buf,"%d",buildingNum);
@@ -182,7 +170,7 @@ void BuildingScene::menuBuild3Callback(Object* pSender)
 {
 	music m;
 	char buf[4];
-	m.effectStart("sound\\effect_btn_click.mp3");
+	m.effectStart("sound/effect_btn_click.mp3");
 	CCScene *pScene = stageSelectScene::createScene();
 	buildingNum = 30;
 	sprintf(buf,"%d",buildingNum);
@@ -197,7 +185,7 @@ void BuildingScene::menuBuild4Callback(Object* pSender)
 {
 	music m;
 	char buf[4];
-	m.effectStart("sound\\effect_btn_click.mp3");
+	m.effectStart("sound/effect_btn_click.mp3");
 	CCScene *pScene = stageSelectScene::createScene();
 	buildingNum = 40;
 	sprintf(buf,"%d",buildingNum);
@@ -211,7 +199,7 @@ void BuildingScene::menuBuild4Callback(Object* pSender)
 void BuildingScene::menuGoBackCallback(CCObject* pSender)
 {
 	music m;
-	m.effectStart("sound\\effect_btn_click.mp3");
+	m.effectStart("sound/effect_btn_click.mp3");
 
 	Scene *pScene = mainScene::createScene();
 	Director::getInstance()->replaceScene(pScene);

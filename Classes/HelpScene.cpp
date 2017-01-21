@@ -30,79 +30,53 @@ Scene* HelpScene::createScene()
 
 bool HelpScene::init()
 {
-	bool bRet = false;
-    do 
-    {
-        //////////////////////////////////////////////////////////////////////////
-        // super init first
-        //////////////////////////////////////////////////////////////////////////
-
-        if ( !LayerColor::initWithColor(Color4B(28, 39, 43, 255)))
+        if ( !LayerColor::initWithColor(Color4B::WHITE))
         {
             return false;
         }
 
-        //////////////////////////////////////////////////////////////////////////
-        // add your codes below...
-        //////////////////////////////////////////////////////////////////////////
-
 		Size size = Director::getInstance()->getWinSize();
-		
-		/*
-		±âÁ¸ ¹è°æÈ­¸é ¼³Á¤
-		*/
-		Sprite* phelpMainScene = Sprite::create("help01.png");
-        CC_BREAK_IF(! phelpMainScene);
-
-		//phelpMainScene->setScale(0.85);
-		phelpMainScene->setPosition(Vec2(240, 1200));
-
-		Sprite* phelpMainScene2 = Sprite::create("help02.png");
-        CC_BREAK_IF(! phelpMainScene2);
-
-		//phelpMainScene2->setScale(0.85);
-		phelpMainScene2->setPosition(Vec2(240, 400));
-
-		LayerColor *layer = LayerColor::create(ccc4(255, 255, 255, 255));
-		layer->setAnchorPoint(Vec2());
-		layer->setPosition(Vec2());
-		layer->setContentSize(Size(480, 1600));
-
-		layer->addChild(phelpMainScene);
-		layer->addChild(phelpMainScene2);
 
 		scrollView = ScrollView::create();
 		scrollView->retain();
         scrollView->setDirection(cocos2d::ui::ScrollView::Direction::VERTICAL);
-        scrollView->setInnerContainerSize(layer->getContentSize());
-		scrollView->setContentSize(layer->getContentSize());
+        scrollView->setInnerContainerSize(Size(size.width, size.height*2));
+		scrollView->setContentSize(size);
 		scrollView->setPosition(Vec2());
-
 		this->addChild(scrollView);
+		
+		Sprite* phelpMainScene = Sprite::create("img/help01.png");
+		phelpMainScene->setAnchorPoint(Vec2(0.5, 1));
+		phelpMainScene->setPosition(Vec2(size.width/2, scrollView->getInnerContainerSize().height));
+		phelpMainScene->setScale(size.width/phelpMainScene->getContentSize().width);
+
+		Sprite* phelpMainScene2 = Sprite::create("img/help02.png");
+		phelpMainScene2->setAnchorPoint(Vec2(0.5, 0));
+		phelpMainScene2->setPosition(Vec2(size.width/2, 0));
+		phelpMainScene2->setScale(size.width/phelpMainScene2->getContentSize().width);
+
+		scrollView->addChild(phelpMainScene);
+		scrollView->addChild(phelpMainScene2);
 
 		MenuItemImage *pCloseHelpScene = MenuItemImage::create(
-            "btn_goBack.png",
-            "btn_goBack_n.png",
+            "img/btn_goBack.png",
+            "img/btn_goBack_n.png",
             this,
 			menu_selector(HelpScene::menu_closeHelpScene));
-        CC_BREAK_IF(! pCloseHelpScene);
 
         // Place the menu item bottom-right conner.
-		pCloseHelpScene->setPosition(ccp(size.width / 1.25 , size.height /14.28 ));
+		pCloseHelpScene->setPosition(Vec2(size.width / 1.25 , size.height /14.28 ));
 		
-		CCMenu* pCloseHelpMenu = CCMenu::create(pCloseHelpScene,NULL);
+		Menu* pCloseHelpMenu = Menu::create(pCloseHelpScene,NULL);
 		pCloseHelpMenu->setPosition(CCPointZero);
 		this->addChild(pCloseHelpMenu,1);
-
-        bRet = true;
-    } while (0);
 
 	return true;
 }
 
 void HelpScene::menu_closeHelpScene(CCObject* pSender)
 { // µµ¿ò¸»Ã¢À» ´ÝÀ½
-	CCDirector::sharedDirector()->popScene();
+	Director::getInstance()->popScene();
 	//push, pop SceneÀ» ÀÌ¿ëÇØ¼­ µÇµ¹¾Æ°¡±â ±¸Çö.
 }
 
