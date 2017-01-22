@@ -36,11 +36,10 @@ Scene* stageSelectScene::createScene()
 // on "init" you need to initialize your instance
 bool stageSelectScene::init()
 {
-    bool bRet = false;
-    do 
-    {
-
-        CC_BREAK_IF(! Layer::init());
+        if(! Layer::init())
+        {
+        	return false;
+        }
 
 		Size size = Director::getInstance()->getWinSize();
 		//sStageNum = 0;
@@ -146,10 +145,7 @@ bool stageSelectScene::init()
 			callfuncO_selector(stageSelectScene::doMsgRecv),
 			"BuildingNoti", NULL);
 
-        bRet = true;
-    } while (0);
-
-    return bRet;
+    return true;
 }
 
 void stageSelectScene::stageMenu(Object* pSender)
@@ -161,7 +157,7 @@ void stageSelectScene::stageMenu(Object* pSender)
 	****/
 	int check;
 	int dechk;
-	CCMenuItem *pGet = (MenuItem *)pSender;
+	MenuItem *pGet = (MenuItem *)pSender;
 	dechk = pGet->getTag();
 	sStageNum = buildingNum + dechk;
 	check = UserDefault::getInstance()->getIntegerForKey("lastStage");
