@@ -9,19 +9,11 @@ using namespace cocos2d;
 
 Scene* mainScene::createScene()
 {
-    Scene *scene = NULL;
-    do 
-    {
-        // 'scene' is an autorelease object
-        scene = Scene::create();
-
-        // 'layer' is an autorelease object
-		mainScene *layer = mainScene::create();
-
-        // add layer as a child to scene
-        scene->addChild(layer);
-    } while (0);
-
+    Scene *scene = Scene::create();
+    // 'layer' is an autorelease object
+	mainScene *layer = mainScene::create();
+    // add layer as a child to scene
+    scene->addChild(layer);
     // return the scene
     return scene;
 }
@@ -155,15 +147,6 @@ void mainScene::menuHelpCallback(Object* pSender)
 	Scene *pScene = HelpScene::createScene();
 
 	Director::getInstance()->pushScene(pScene);
-
-	/*
-	CCScene* pScene = CCScene::create();
-	HelpScene *pLayer = new HelpScene("main");
-	pLayer->autorelease();
-	pScene->addChild(pLayer);
-	CCDirector::sharedDirector()->pushScene(pScene);
-	*/
-	
 }
 
 void mainScene::menuStartCallback(Object* pSender)

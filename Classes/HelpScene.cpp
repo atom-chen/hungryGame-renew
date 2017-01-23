@@ -75,7 +75,7 @@ bool HelpScene::init()
 }
 
 void HelpScene::menu_closeHelpScene(CCObject* pSender)
-{ // µµ¿ò¸»Ã¢À» ´ÝÀ½
+{
 	Director::getInstance()->popScene();
 	//push, pop SceneÀ» ÀÌ¿ëÇØ¼­ µÇµ¹¾Æ°¡±â ±¸Çö.
 }

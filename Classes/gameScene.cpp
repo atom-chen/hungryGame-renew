@@ -564,7 +564,7 @@ void gameScene::createFood()
 		int foodX = dfoodpoint.at("x").asInt();
 		int foodY = dfoodpoint.at("y").asInt();
 		Vec2 foodpoint = Vec2(foodX+MOVEX,foodY+MOVEY);
-		Sprite* food = Sprite::createWithTexture(foodTexture,CCRectMake(100*(i%5),100*(i/5),100,100));
+		Sprite* food = Sprite::createWithTexture(foodTexture,Rect(100*(i%5),100*(i/5),100,100));
 		food->setPosition(foodpoint);
 		food->setScale(0.48);
 		food->setTag(i+1);
