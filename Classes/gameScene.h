@@ -95,7 +95,7 @@ public:
 	Array*						onCheckFoodDisplay;				// 위에 음식을 먹었는지 안먹었는지 체크할 배열,	
 	void createFood();												//food create item, (point, imageName)
 	bool checkDup(Sprite*);										// check duplication about tile
-	void updateFoodSprte(float dt);
+	void updateFoodSprite(float dt);
 	void followCharacter(float);
 	void check_counter(float);
 	void createCounter();
@@ -108,8 +108,8 @@ public:
 	void onExit();
 	
 	// array for check when character eat the food ingrediant
-	Array*						foodSpriteArray;				// array for save the food sprite
-	Array*						foodFollowArray;				// array for follow character
+    cocos2d::Vector<Sprite*>						foodSpriteArray;				// array for save the food sprite
+	cocos2d::Vector<Sprite*>						foodFollowArray;				// array for follow character
 	int								foodcount;						// for food count
 	int								foodFollowCnt;
 	Vec2							beforeMoveCharPoint[10];

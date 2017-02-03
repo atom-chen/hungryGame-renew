@@ -29,8 +29,8 @@ enum DIRCTION { UP, DOWN, LEFT, RIGHT};
 */
 gameScene::~gameScene()
 {
-	delete foodSpriteArray;
-	delete foodFollowArray;
+	//delete foodSpriteArray;
+	//delete foodFollowArray;
 	this->onExit();
 }
 Scene* gameScene::createScene()
@@ -61,8 +61,8 @@ bool gameScene::init()
     if(!LayerColor::initWithColor(Color4B::WHITE))
 		return false;
 	gStageidx = UserDefault::getInstance()->getIntegerForKey("curStage");
-	foodSpriteArray = new Array; //food sprite array dynamic cast
-	foodFollowArray = new Array;
+    foodSpriteArray.clear(); //food sprite array dynamic cast
+    foodFollowArray.clear();
 	result=" ";
 	isSuper = false;
 	
@@ -102,7 +102,7 @@ bool gameScene::init()
 	if(tileMap->getLayer("Items"))
 	{
 		metainfo = tileMap->getLayer("Items");
-		metainfo->setVisible(false); // 빨간벽을 표시안함.
+		metainfo->setVisible(false);
 	}
 	tileLayer->addChild(tileMap);
 
@@ -124,9 +124,9 @@ bool gameScene::init()
 	/* make food				: Pineoc */
 	
 	this->createFood();
-	foodcount = foodSpriteArray->count();
+	foodcount = (int)foodSpriteArray.size();
 	this->createFoodShelf();
-	this->schedule(schedule_selector(gameScene::updateFoodSprte));
+	this->schedule(schedule_selector(gameScene::updateFoodSprite));
 	this->schedule(schedule_selector(gameScene::check_counter));
 	this->schedule(schedule_selector(gameScene::followCharacter));
 	this->schedule(schedule_selector(gameScene::checkFollowFoodCollision));
@@ -181,7 +181,7 @@ bool gameScene::init()
 
 
 	/* Add notification			: jiyoon */
-	CCNotificationCenter::sharedNotificationCenter()->addObserver(this,
+	NotificationCenter::getInstance()->addObserver(this,
 		callfuncO_selector(gameScene::doNotification),
 		"notification", NULL);
 	//"notification"이라는 메시지가 오면 해당 함수를 실행한다.
@@ -324,15 +324,12 @@ void gameScene::moveCharacter(float dt)
 	/*  check collision food and character						: Pineoc*/
 	beforeMoveCharPoint[0] = character->getPosition();
 	foodFollowCnt=1;
-	Object* ob = NULL;
-	CCARRAY_FOREACH(foodFollowArray,ob)
+    for(int i=0;i<foodSpriteArray.size();i++)
 	{
-		Sprite* foodFollow = dynamic_cast<Sprite*>(ob);
+        Sprite* foodFollow = foodSpriteArray.at(i);
 		beforeMoveCharPoint[foodFollowCnt] = foodFollow->getPosition();
 		foodFollowCnt++;
 	}
-
-
 
 	if(checkCrash == nothing)
 	{
@@ -414,69 +411,9 @@ void gameScene::moveCharacter(float dt)
 		}
 	}
 
-
-	//Sleep(movingSpeed);
 }
 
-/*
-* ** FUNCTION
-* bool ccTouchBegan(CCTouch*, CCEvent*)			when touch is began
-* Input											touch position , event
-* Output										true
-* Date											2013. 10. 03
-* Latest										2013. 10. 03
-* Made											Daun
-*/
-//bool gameScene::ccTouchBegan(CCTouch *pTouch, CCEvent* event) {	return true; }
 
-
-/*
-* ** FUNCTION
-* void ccTouchEnded(CCTouch *, CCEvent* )		when touch action is ended this function called.
-* Input											touch position, event
-* Output										true
-* Date											2013. 10. 03
-* Latest										2013. 10. 03
-* Made											Daun ,jiyoon
-*/
-
-//void gameScene::ccTouchEnded(Touch *pTouch, Event* event)
-//{
-//	Vec2 playerPos = character->getPosition();
-//	Vec2 touchLocation = pTouch->getLocation();
-//	touchLocation = this->convertToNodeSpace(touchLocation);
-//
-//	CCSize size = Director::getInstance()->getWinSize();
-//
-//	/* check pause btn is pressed or not	: daun */
-//	Vec2 pauseDiff = Vec2(touchLocation,pauseBtnPosition);
-//	float pauseBtnWidth = size.width * 0.1;
-//	float pauseBtnHeight = size.height * 0.1;
-//
-//	if((abs(pauseDiff.x) <= pauseBtnWidth) && (abs(pauseDiff.y) <= pauseBtnHeight))
-//	{
-//		music m;
-//		m.effectStart("sound\\effect_btn_click.mp3");
-//		this->doPop( (Object*)gStageidx );
-//	}
-//
-//	originPos = character->getPosition();
-//
-//	/*  set moveDirection					: daun */
-//	// 캐릭터를 기준으로 어느 위치를 클릭했는지에 따라 캐릭터가 이동할 방향 결정
-//	Vec2 diff = touchLocation - playerPos;
-//
-//    if (std::abs(diff.x) > std::abs(diff.y))
-//	{
-//		if (diff.x > 0) {	if(moveDirection != LEFT) {moveDirection = RIGHT;	character->setFlipX(true);} } 
-//		else			{	if(moveDirection != RIGHT) {moveDirection = LEFT;	character->setFlipX(false);} }
-//	} 
-//	else 
-//	{
-//		if (diff.y > 0) {	if(moveDirection != DOWN) moveDirection = UP;	 } 
-//		else			{	if(moveDirection != UP) moveDirection = DOWN;}
-//	}
-//}
 /*
 * ** FUNCTION
 * void createCharacter()						make character on map
@@ -533,8 +470,8 @@ void gameScene::createCharacter()
 * Made											Pineoc
 */
 void gameScene::createFood()
-{//collision correct, duplication correct
-	//후에 인자값을 CCArray로 받아서 음식재료를 다 뿌리는것으로 만듬.
+{
+    //collision correct, duplication correct
 	//char* inputdata = NULL;
 	//CCString *a=NULL;
 	const char* foodarr[10]={"food1","food2","food3","food4","food5","food6","food7","food8","food9","food10"};
@@ -558,7 +495,7 @@ void gameScene::createFood()
 	for(int i = 0 ; i < 10; i++)
 	{
 		ValueMap dfoodpoint = foods->getObject(foodarr[i]);
-        if(dfoodpoint.size()<0)
+        if(dfoodpoint.size()<1)
 			break;
 		//if does not have food, break
 		int foodX = dfoodpoint.at("x").asInt();
@@ -569,9 +506,11 @@ void gameScene::createFood()
 		food->setScale(0.48);
 		food->setTag(i+1);
 		food->setAnchorPoint(Vec2(0,0));
-		foodSpriteArray->addObject(food);
+		//foodSpriteArray->addObject(food);
+        foodSpriteArray.pushBack(food);
 		this->addChild(food);
 	}
+    log("foodSpriteArray check");
 }
 
 
@@ -592,7 +531,7 @@ bool gameScene::checkDup(Sprite* checkfood)
 	Rect checkfoodbounding = checkfood->getBoundingBox();
 	for(int i=0;i<foodcount;i++)
 	{//check the all food object
-		Sprite* check = (Sprite*)foodSpriteArray->objectAtIndex(i);
+		Sprite* check = (Sprite*)foodSpriteArray.at(i);
 		Rect checkbounding = check->getBoundingBox();
 		if(checkfoodbounding.intersectsRect(checkbounding))
 		{
@@ -616,37 +555,38 @@ bool gameScene::checkDup(Sprite* checkfood)
 * Latest										2013. 10. 03
 * Made											Pineoc
 */
-void gameScene::updateFoodSprte(float dt)
+void gameScene::updateFoodSprite(float dt)
 {
-	Array* foodToDelete = new Array;
-	Object* foodobject = NULL;
-	Size size = Director::getInstance()->getWinSize();
-	CCARRAY_FOREACH(foodSpriteArray,foodobject)
+    Vector<Sprite*> foodToDelete;
+	Size size = Director::getInstance()->getVisibleSize();
+	//CCARRAY_FOREACH(foodSpriteArray, foodobject)
+    for(int i=0;i<foodcount;i++)
 	{
 		Rect characterRect = Rect(character->getPosition().x - (character->getContentSize().width/2),
 			character->getPosition().y -(character->getContentSize().height/2),
 			character->getContentSize().width,
 			character->getContentSize().height);
-		Sprite* foodSprite = dynamic_cast<Sprite*>(foodobject);
+		Sprite* foodSprite = foodSpriteArray.at(i);
 		Rect foodRect = Rect(foodSprite->getPosition().x - (foodSprite->getContentSize().width/2*foodSprite->getScale()),
 			foodSprite->getPosition().y -(foodSprite->getContentSize().height/2*foodSprite->getScale()),
 			foodSprite->getContentSize().width*foodSprite->getScale(),
 			foodSprite->getContentSize().height*foodSprite->getScale());
 		if(characterRect.intersectsRect(foodRect))
-		{
-			foodToDelete->addObject(foodSprite);
+        {
+            foodToDelete.pushBack(foodSprite);
+            //foodToDelete->addObject(foodSprite);
 			//foodFollowArray->addObject(foodSprite);//add foods for following character
 			//foodSpriteArray->removeObject(foodobject);
 		}
 	}
-	CCARRAY_FOREACH(foodToDelete,foodobject)
+	//CCARRAY_FOREACH(foodToDelete,foodobject)
+    for(int i=0;i<foodToDelete.size();i++)
 	{
-		Sprite* delfood = dynamic_cast<Sprite*>(foodobject);
-		foodFollowArray->addObject(delfood);
-		foodSpriteArray->removeObject(delfood);
+        Sprite* delfood = foodToDelete.at(i);
+        foodFollowArray.eraseObject(delfood);
+		foodSpriteArray.eraseObject(delfood);
 	}
-
-	foodToDelete->release();
+	foodToDelete.clear();
 }
 /*
 * ** FUNCTION
@@ -661,7 +601,8 @@ void gameScene::checkFollowFoodCollision(float dt)
 {
 	Object* foodobject = NULL;
 	Size size = Director::getInstance()->getWinSize();
-	CCARRAY_FOREACH(foodFollowArray,foodobject)
+	//CCARRAY_FOREACH(foodFollowArray,foodobject)
+    for(int i=0;i<foodFollowArray.size();i++)
 	{
 		Rect characterRect = Rect(character->getPosition().x - (character->getContentSize().width/2),
 			character->getPosition().y -(character->getContentSize().height/2),
@@ -673,9 +614,9 @@ void gameScene::checkFollowFoodCollision(float dt)
 			foodSprite->getContentSize().width*foodSprite->getScale()-20,
 			foodSprite->getContentSize().height*foodSprite->getScale()-20);
 		if(characterRect.intersectsRect(foodRect) 
-			&& foodFollowArray->objectAtIndex(0)!=foodobject 
-			&& foodFollowArray->objectAtIndex(1)!=foodobject
-			&& foodFollowArray->objectAtIndex(2)!=foodobject)
+			&& foodFollowArray.at(0)!=foodobject
+			&& foodFollowArray.at(1)!=foodobject
+			&& foodFollowArray.at(2)!=foodobject)
 		{
 			this->decreaseGaugeBar(10);
 		}
@@ -696,9 +637,9 @@ void gameScene::followCharacter(float dt)
 	Vec2 tmp1=beforeMoveCharPoint[0];
 	Vec2 tmp2;
 
-	for(int i=1;i<foodFollowArray->count()+1;i++)
+	for(int i=1;i<foodFollowArray.size()+1;i++)
 	{
-		Sprite* foodf = dynamic_cast<Sprite*>(foodFollowArray->objectAtIndex(i-1));
+		Sprite* foodf = dynamic_cast<Sprite*>(foodFollowArray.at(i-1));
 		foodf->setPosition(tmp1);
 		tmp2=beforeMoveCharPoint[i];
 		tmp1=tmp2;	
@@ -809,10 +750,10 @@ void gameScene::go_endResultScene(int chk)
 void gameScene::checkFoodToEnd()
 {//string result = ?
     std::string c;
-	int count = foodFollowArray->count();
+	int count = foodFollowArray.size();
 	for(int i=0;i<count;i++)
 	{
-		Sprite* a = ((Sprite*)foodFollowArray->objectAtIndex(i));
+		Sprite* a = ((Sprite*)foodFollowArray.at(i));
         c = StringUtils::format("%d", a->getTag());
         result.append((std::string)c+" ");
 	}
@@ -848,7 +789,7 @@ void gameScene::goRegame(int stage)
 * Latest										2013. 10. 03
 * Made											jiyoon
 */
-void gameScene::doPop(CCObject* pSender)
+void gameScene::doPop(Object* pSender)
 {
 	//Director::sharedDirector()->getTouchDispatcher()->removeDelegate(this);		//set touch enable
     UserDefault::getInstance()->setIntegerForKey("curStage",gStageidx);
