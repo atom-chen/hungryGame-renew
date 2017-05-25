@@ -35,11 +35,11 @@ music::music(int BG, int EFFECT)
 /*
 	start background music
 */
-void music::bgStart(char *musicName)
+void music::bgStart(std::string musicName)
 {
 	if(userData::sharedInstance()->getBGM())
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->playBackgroundMusic(
-			musicName,	// 재생할 사운드 파일 이름
+	CocosDenshion::SimpleAudioEngine::getInstance()->playBackgroundMusic(
+			musicName.c_str(),	// 재생할 사운드 파일 이름
 			true);			// 반복재생여부
 }
 
@@ -48,7 +48,7 @@ void music::bgStart(char *musicName)
 */
 void music::bgStop()
 {
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->stopBackgroundMusic();
+	CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic();
 }
 
 /*
@@ -56,7 +56,7 @@ void music::bgStop()
 */
 void music::bgPause()
 {
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+	CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 }
 
 /*
@@ -64,16 +64,16 @@ void music::bgPause()
 */
 void music::bgRestart()
 {
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+	CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 }
 
 
 // effect sound start
-void music::effectStart(char *effectName)
+void music::effectStart(std::string effectName)
 {
 	if(userData::sharedInstance()->getEFFECT())
-	CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect(
-			effectName,	
+	CocosDenshion::SimpleAudioEngine::getInstance()->playEffect(
+			effectName.c_str(),
 			false);	
 
 	// true로 설정하면 반복함

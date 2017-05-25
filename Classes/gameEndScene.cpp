@@ -27,7 +27,7 @@ gameEndScene::gameEndScene(int _result,int _stageidx)
 	background->setPosition(Vec2(size.width/2,size.height/2));
 	this->addChild(background,0);
 
-    std::string food_arr = StringUtils::format("/img/food/%d.png",stageidx);
+    std::string food_arr = StringUtils::format("img/food/%d.png",stageidx);
 	Sprite* foodImage = Sprite::create(food_arr); //by eunji
 	foodImage->setPosition(Vec2(size.width/2,size.height/2));
 	this->addChild(foodImage,1);
@@ -102,15 +102,15 @@ bool gameEndScene::init()
 {
 	return true;
 }
-void gameEndScene::menu_retry(CCObject* pSender)
+void gameEndScene::menu_retry(Object* pSender)
 {
 	
 	//여기서 스테이지의 idx가져와서 다시 replace 하는 방식으로 가야할듯.
-	CCScene *pScene = gameScene::createScene();
+	Scene *pScene = gameScene::createScene();
 	Director::getInstance()->replaceScene(pScene);
 
 }
-void gameEndScene::menu_nextStage(CCObject* pSender)
+void gameEndScene::menu_nextStage(Object* pSender)
 {
 	
 	//스테이지의 idx를 가져와서 idx+1 하여 다음 스테이지를 가져오게끔 해야할 듯.
@@ -120,10 +120,11 @@ void gameEndScene::menu_nextStage(CCObject* pSender)
 	else
 		UserDefault::getInstance()->setIntegerForKey("curStage",stageidx+1);
 	UserDefault::getInstance()->flush();
+    
 	Scene *pScene = gameScene::createScene();
 	Director::getInstance()->replaceScene(pScene);
 }
-void gameEndScene::menu_backtoStageScene(CCObject* pSender)
+void gameEndScene::menu_backtoStageScene(Object* pSender)
 {
 	/*
 	스테이지 선택하는 Scene으로 넘어감.

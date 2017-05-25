@@ -25,12 +25,12 @@ public:
 	music(int, int);
 
 
-	void bgStart(char *);
+    void bgStart(std::string);
 	void bgStop();
 	void bgPause();
 	void bgRestart();
 
-	void effectStart(char *);
+	void effectStart(std::string);
 	
 	void setEffectSoundVolume(int);
 	int getEffectSoundVolume();
@@ -46,8 +46,8 @@ public:
 
 
 private:
-	 int effectSoundVolume;		// È¿°úÀ½ÀÇ ÇöÀç Å©±â¸¦ °¡Áö°í ÀÖ´Ù.   volume of effect sound
-	 int bgSoundVolume;			// ¹è°æÀ½¾àÀÇ ÇöÀç Å©±â¸¦ °¡Áö°í ÀÖ´Ù. volume of background sound
+	 int effectSoundVolume;		// Â»Ã¸âˆË™Â¿Î©Â¿Â« Â«Ë†Â¿Ã â‰ˆÂ©Â±â€šâˆÂ¶ âˆÂ°Â¡Ë†âˆÃŒ Â¿Ã·Â¥Å¸.   volume of effect sound
+	 int bgSoundVolume;			// Ï€Ã‹âˆÃŠÂ¿Î©Ã¦â€¡Â¿Â« Â«Ë†Â¿Ã â‰ˆÂ©Â±â€šâˆÂ¶ âˆÂ°Â¡Ë†âˆÃŒ Â¿Ã·Â¥Å¸. volume of background sound
 
 };
 

@@ -136,7 +136,7 @@ bool BuildingScene::init()
 }
 
 // 첫번째 빌딩
-void BuildingScene::menuBuild1Callback(CCObject* pSender)
+void BuildingScene::menuBuild1Callback(Object* pSender)
 {
 	music m;
 	char buf[4];
@@ -144,8 +144,8 @@ void BuildingScene::menuBuild1Callback(CCObject* pSender)
 	Scene *pScene = stageSelectScene::createScene();
 	buildingNum = 10;
 	sprintf(buf,"%d",buildingNum);
-	CCString* popParam=CCString::create(buf);
-	NotificationCenter::sharedNotificationCenter()->postNotification("BuildingNoti", popParam);
+	String* popParam=String::create(buf);
+	NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
 	
 	Director::getInstance()->replaceScene(pScene);
 }
@@ -156,11 +156,11 @@ void BuildingScene::menuBuild2Callback(Object* pSender)
 	music m;
 	char buf[4];
 	m.effectStart("sound/tn_click.mp3");
-	CCScene *pScene = stageSelectScene::createScene();
+	Scene *pScene = stageSelectScene::createScene();
 	buildingNum = 20;
 	sprintf(buf,"%d",buildingNum);
-	CCString* popParam=CCString::create(buf);
-	CCNotificationCenter::sharedNotificationCenter()->postNotification("BuildingNoti", popParam);
+	String* popParam=String::create(buf);
+	NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
 	
 	Director::getInstance()->replaceScene(pScene);
 }
@@ -171,11 +171,11 @@ void BuildingScene::menuBuild3Callback(Object* pSender)
 	music m;
 	char buf[4];
 	m.effectStart("sound/effect_btn_click.mp3");
-	CCScene *pScene = stageSelectScene::createScene();
+	Scene *pScene = stageSelectScene::createScene();
 	buildingNum = 30;
 	sprintf(buf,"%d",buildingNum);
-	CCString* popParam=CCString::create(buf);
-	CCNotificationCenter::sharedNotificationCenter()->postNotification("BuildingNoti", popParam);
+	String* popParam=String::create(buf);
+	NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
 	
 	Director::getInstance()->replaceScene(pScene);
 }
@@ -186,17 +186,17 @@ void BuildingScene::menuBuild4Callback(Object* pSender)
 	music m;
 	char buf[4];
 	m.effectStart("sound/effect_btn_click.mp3");
-	CCScene *pScene = stageSelectScene::createScene();
+	Scene *pScene = stageSelectScene::createScene();
 	buildingNum = 40;
 	sprintf(buf,"%d",buildingNum);
-	CCString* popParam=CCString::create(buf);
-	CCNotificationCenter::sharedNotificationCenter()->postNotification("BuildingNoti", popParam);
+	String* popParam=String::create(buf);
+	NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
 	
 	Director::getInstance()->replaceScene(pScene);
 }
 
 //되돌아가기
-void BuildingScene::menuGoBackCallback(CCObject* pSender)
+void BuildingScene::menuGoBackCallback(Object* pSender)
 {
 	music m;
 	m.effectStart("sound/effect_btn_click.mp3");

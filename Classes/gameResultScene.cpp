@@ -26,13 +26,13 @@ bool gameResultScene::init()
 	stageNSprite->setPosition(Vec2(size.width*0.32,size.height*0.93));
 	this->addChild(stageNSprite,0);
 
-	CCMenuItemImage *btnEnd = CCMenuItemImage::create(
+	MenuItemImage *btnEnd = MenuItemImage::create(
 		"img/endResult/main_btn_endgame.png", "img/endResult/main_btn_endgame_n.png", this, menu_selector(gameResultScene::menu_goEndScene));
 
-	btnEnd->setPosition(ccp(size.width*0.8, size.height*0.1));
+	btnEnd->setPosition(Vec2(size.width*0.8, size.height*0.1));
 	btnEnd->setScale(0.8);
-	CCMenu* endMenu = CCMenu::create(btnEnd, NULL);
-	endMenu->setPosition(CCPointZero);
+	Menu* endMenu = Menu::create(btnEnd, NULL);
+    endMenu->setPosition(Vec2::ZERO);
 
 	this->addChild(endMenu, 2);
 
@@ -63,7 +63,7 @@ void gameResultScene::make_foodSprite()
 	int successCnt = 0;			//성공한 음식 갯수 저장하는곳
 	double x=0.2;
 	double y=0.65;// for sprite position
-	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+	Size winSize = Director::getInstance()->getVisibleSize();
 	for(int i=0;i<10;i++)
 	{		
 		if(i==2 || i==4 || i== 6 || i == 8)
@@ -84,7 +84,7 @@ void gameResultScene::make_foodSprite()
 		Vec2 position = Vec2(winSize.width*x,winSize.height*y);
 		std::string food_arr = StringUtils::format("img/food/%d_f.png",stageidx);
 		Texture2D *texture = TextureCache::sharedTextureCache()->addImage(food_arr);
-		Sprite* foodsprite = Sprite::createWithTexture(texture,CCRectMake(100*(i%5),100*(i/5),100,100));
+		Sprite* foodsprite = Sprite::createWithTexture(texture, Rect(100*(i%5),100*(i/5),100,100));
 
 		foodsprite->setAnchorPoint(Vec2(0,0));
 		foodsprite->setPosition(position);

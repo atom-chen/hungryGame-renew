@@ -60,13 +60,16 @@ bool gameScene::init()
 {
     if(!LayerColor::initWithColor(Color4B::WHITE))
 		return false;
-	gStageidx = UserDefault::getInstance()->getIntegerForKey("curStage");
+    
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    
+    gStageidx = UserDefault::getInstance()->getIntegerForKey("curStage");
     foodSpriteArray.clear(); //food sprite array dynamic cast
     foodFollowArray.clear();
 	result=" ";
 	isSuper = false;
+    
 	
-
 	//using stageidx for regame
 	//set idx end. 
 	//gStageidx = stageIDX;
@@ -80,6 +83,7 @@ bool gameScene::init()
 	/* Set background img		: Daun */
 	Sprite* bg = Sprite::create("img/game/game_bg.png");
 	bg->setPosition(Vec2(size.width/2,size.height/2));
+    bg->setScale(visibleSize.height/bg->getContentSize().height);
 	this->addChild(bg,0);
     
     std::string stagenum = StringUtils::format("img/game/stageNum/%d.png",gStageidx-9);
@@ -190,8 +194,8 @@ bool gameScene::init()
 
 	/* Add Items				: jiyoon */
 	//decide kind of item.
-	srand(time(0));	//random
-	int kindOfItem = 4;//rand()%4 + 1;	//range : 1~4
+	//srand(time(0));	//random
+    int kindOfItem = RandomHelper::random_int(1, 4);	//range : 1~4
 	item1 =NULL, item2 = NULL, item3 =NULL, item4=NULL;
 	if(tileMap->getObjectGroup("items"))
 	{
@@ -280,9 +284,9 @@ Vec2 gameScene::tileCoorPosition(Vec2 position)
 */
 void gameScene::createObstacle()
 {
-	Texture2D *obTexture = TextureCache::sharedTextureCache()->addImage("map/meat.png");
+	Texture2D *obTexture = Director::getInstance()->getTextureCache()->addImage("map/meat.png");
 
-	obstacle = Sprite::createWithTexture(obTexture,Rect(0, 0, 60, 60)); // ¸Ê¿¡ ¸ÂÃç ¼ýÀÚ ¹Ù²ã¾ßÇÔ
+	obstacle = Sprite::createWithTexture(obTexture, Rect(0, 0, 60, 60)); // ¸Ê¿¡ ¸ÂÃç ¼ýÀÚ ¹Ù²ã¾ßÇÔ
 	obstacle->setPosition(obstaclePosition);
 	obstacle->setAnchorPoint(Vec2(0,0));
 	this->addChild(obstacle);
@@ -510,7 +514,6 @@ void gameScene::createFood()
         foodSpriteArray.pushBack(food);
 		this->addChild(food);
 	}
-    log("foodSpriteArray check");
 }
 
 

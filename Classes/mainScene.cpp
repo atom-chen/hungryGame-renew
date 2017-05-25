@@ -29,7 +29,7 @@ bool mainScene::init()
 		Size size = Director::getInstance()->getWinSize();
 
 		music mu;
-		mu.bgStart("background.mp3");
+		mu.bgStart("sound/background.mp3");
         // 1. Add a menu item with "X" image, which is clicked to quit the program.
 
 		// 메인화면 배경 이미지 생성
