@@ -21,7 +21,7 @@ bool MakerInfoScene::init()
     }
 
 	//위도우 사이즈
-	winSize = Director::getInstance()->getWinSize();
+	winSize = Director::getInstance()->getVisibleSize();
 
 	//Info창 레이어 추가
 	pInfo = Sprite::create("img/devinfoScene_bg.png");

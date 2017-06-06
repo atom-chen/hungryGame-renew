@@ -102,7 +102,7 @@ bool gameEndScene::init()
 {
 	return true;
 }
-void gameEndScene::menu_retry(Object* pSender)
+void gameEndScene::menu_retry(Ref* pSender)
 {
 	
 	//여기서 스테이지의 idx가져와서 다시 replace 하는 방식으로 가야할듯.
@@ -110,7 +110,7 @@ void gameEndScene::menu_retry(Object* pSender)
 	Director::getInstance()->replaceScene(pScene);
 
 }
-void gameEndScene::menu_nextStage(Object* pSender)
+void gameEndScene::menu_nextStage(Ref* pSender)
 {
 	
 	//스테이지의 idx를 가져와서 idx+1 하여 다음 스테이지를 가져오게끔 해야할 듯.
@@ -124,7 +124,7 @@ void gameEndScene::menu_nextStage(Object* pSender)
 	Scene *pScene = gameScene::createScene();
 	Director::getInstance()->replaceScene(pScene);
 }
-void gameEndScene::menu_backtoStageScene(Object* pSender)
+void gameEndScene::menu_backtoStageScene(Ref* pSender)
 {
 	/*
 	스테이지 선택하는 Scene으로 넘어감.

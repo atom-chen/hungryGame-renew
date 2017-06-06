@@ -14,11 +14,11 @@ public:
     static cocos2d::Scene* createScene();
     
     // a selector callback
-    void menuCloseCallback(cocos2d::Object* pSender);
-	void menuOptionCallback(cocos2d::Object* pSender);
-	void menuHelpCallback(cocos2d::Object* pSender);
-	void menuStartCallback(cocos2d::Object* pSender);
-	void menuDevCallback(cocos2d::Object* pSender);
+    void menuCloseCallback(cocos2d::Ref* pSender);
+	void menuOptionCallback(cocos2d::Ref* pSender);
+	void menuHelpCallback(cocos2d::Ref* pSender);
+	void menuStartCallback(cocos2d::Ref* pSender);
+	void menuDevCallback(cocos2d::Ref* pSender);
 
     // implement the "static node()" method manually
     CREATE_FUNC(mainScene);

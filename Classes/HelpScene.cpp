@@ -11,18 +11,13 @@
 
 Scene* HelpScene::createScene()
 {
-	Scene * scene = NULL;
-    do 
-    {
-        // 'scene' is an autorelease object
-        scene = Scene::create();
+	Scene * scene = Scene::create();
 
-        // 'layer' is an autorelease object
-		HelpScene *layer = HelpScene::create();
+    // 'layer' is an autorelease object
+    HelpScene *layer = HelpScene::create();
 
-        // add layer as a child to scene
-        scene->addChild(layer);
-    } while (0);
+    // add layer as a child to scene
+    scene->addChild(layer);
 
     // return the scene
     return scene;
@@ -68,13 +63,13 @@ bool HelpScene::init()
 		pCloseHelpScene->setPosition(Vec2(size.width / 1.25 , size.height /14.28 ));
 		
 		Menu* pCloseHelpMenu = Menu::create(pCloseHelpScene,NULL);
-		pCloseHelpMenu->setPosition(CCPointZero);
+		pCloseHelpMenu->setPosition(Vec2());
 		this->addChild(pCloseHelpMenu,1);
 
 	return true;
 }
 
-void HelpScene::menu_closeHelpScene(CCObject* pSender)
+void HelpScene::menu_closeHelpScene(Ref* pSender)
 {
 	Director::getInstance()->popScene();
 	//push, pop SceneÀ» ÀÌ¿ëÇØ¼­ µÇµ¹¾Æ°¡±â ±¸Çö.

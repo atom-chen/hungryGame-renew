@@ -1,7 +1,7 @@
 #pragma once
 #include "cocos2d.h"
 USING_NS_CC;
-class gameResultScene : public CCLayerColor
+class gameResultScene : public LayerColor
 {
 public:
 	gameResultScene(std::string,int,int);
@@ -12,7 +12,7 @@ public:
 //	void check_food();
 	void make_foodSprite();
 
-	void menu_goEndScene(Object*);
+	void menu_goEndScene(Ref*);
 
 //	void selectionSort(int*,int);
 //	bool checkSame(int*,int*);

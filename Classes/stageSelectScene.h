@@ -10,7 +10,7 @@
 
 using namespace cocos2d;
 
-class stageSelectScene : public cocos2d::CCLayer
+class stageSelectScene : public cocos2d::Layer
 {
 public:
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
@@ -20,11 +20,11 @@ public:
     static cocos2d::Scene* createScene();
     
    
-	void stageMenu(Object* pSender);
-	void menuGoBackCallback(Object* pSender);
+	void stageMenu(Ref* pSender);
+	void menuGoBackCallback(Ref* pSender);
 	void onExit();
 	void goStageScene();
-	void doMsgRecv(Object* obj);
+	void doMsgRecv(Ref* obj);
 	int sStageNum; // for stage of each building
 	int buildingNum;
     // implement the "static node()" method manually

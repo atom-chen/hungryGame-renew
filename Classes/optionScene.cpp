@@ -4,26 +4,19 @@
 * Daun
 */
 
-#include "OptionScene.h"
+#include "optionScene.h"
 
 
 enum musicOnOffList{ bgOn, bgOff, effectOn, effectOff};
-CCScene* OptionScene::scene()
+Scene* OptionScene::createScene()
 {
-	CCScene * scene = NULL;
-    do 
-    {
-        // 'scene' is an autorelease object
-        scene = CCScene::create();
-        CC_BREAK_IF(! scene);
+	Scene * scene = Scene::create();
 
-        // 'layer' is an autorelease object
-		OptionScene *layer = OptionScene::create();
-        CC_BREAK_IF(! layer);
+    // 'layer' is an autorelease object
+    OptionScene *layer = OptionScene::create();
 
-        // add layer as a child to scene
-        scene->addChild(layer);
-    } while (0);
+    // add layer as a child to scene
+    scene->addChild(layer);
 
     // return the scene
     return scene;
@@ -49,7 +42,7 @@ bool OptionScene::init()
 			this,
 			menu_selector(OptionScene::OnOffMenu));
 
-		pBGON->setPosition(ccp(size.width * 0.6, size.height * 0.6));
+		pBGON->setPosition(Vec2(size.width * 0.6, size.height * 0.6));
 		pBGON->setTag(bgOn);
 
 		MenuItemImage *pBGOFF = MenuItemImage::create(
@@ -58,7 +51,7 @@ bool OptionScene::init()
 			this,
 			menu_selector(OptionScene::OnOffMenu));
 
-		pBGOFF->setPosition(ccp(size.width * 0.8, size.height * 0.6));
+		pBGOFF->setPosition(Vec2(size.width * 0.8, size.height * 0.6));
 		pBGOFF->setTag(bgOff);
 
 		MenuItemImage *pEffectOn = MenuItemImage::create(
@@ -81,7 +74,7 @@ bool OptionScene::init()
 
 
 		Menu *pONOFFMenu = Menu::create(pBGON, pBGOFF, pEffectOn, pEffectOff,NULL);
-		pONOFFMenu->setPosition(CCPointZero);
+		pONOFFMenu->setPosition(Vec2());
 		this->addChild(pONOFFMenu,1);
 
 		/*
@@ -97,19 +90,19 @@ bool OptionScene::init()
 		pCloseScene->setPosition(Vec2(size.width / 1.25 , size.height /14.28 ));
 		
 		Menu* pCloseMenu = Menu::create(pCloseScene,NULL);
-		pCloseMenu->setPosition(CCPointZero);
+		pCloseMenu->setPosition(Vec2());
 		this->addChild(pCloseMenu,1);
 
 	return true;
 }
 
-void OptionScene::goBackMenu(Object* pSender)
+void OptionScene::goBackMenu(Ref* pSender)
 { // 도움말창을 닫음
 	Scene *pScene = mainScene::createScene();
 	Director::getInstance()->replaceScene(pScene);
 }
 
-void OptionScene::OnOffMenu(Object* pSender)
+void OptionScene::OnOffMenu(Ref* pSender)
 {
 	// set fuction to on off buttons
 	MenuItem *pGet = (MenuItem *)pSender;

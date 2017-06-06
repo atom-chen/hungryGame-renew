@@ -6,7 +6,6 @@
 * Game Scene
 */
 #include "cocos2d.h"
-
 #include "SimpleAudioEngine.h"
 
 class gameScene : public cocos2d::LayerColor
@@ -50,11 +49,11 @@ public:
 	int								countNum;							// 프레임 수.
 	int								obX, obY;
 	bool checkObDirection;
-	void doActionMovingObstacleRight(Object* pSender);
-	void doActionMovingObstacleLeft(Object* pSender);
+	void doActionMovingObstacleRight(Ref* pSender);
+	void doActionMovingObstacleLeft(Ref* pSender);
 	void moveObstacleHeight(float);// 장애물 움직임 구현
 	void moveObstacleWidth(float);
-	void doActionMovingObstacleReverse(Object* pSender);
+	void doActionMovingObstacleReverse(Ref* pSender);
 
 	void decreaseGaugeBar(int num);
 	void increaseGaugeBar(int num);
@@ -67,10 +66,10 @@ public:
 	TMXTiledMap *tileMap; // tileMap name to select stage
 
 	/* character									: Daun */
-	float								movingSpeed;						// 캐릭터의 이동 속도
+	float							movingSpeed;						// 캐릭터의 이동 속도
 	int								moveDirection;						// 캐릭터가 현재 이동하고 있는 방향을 저장함
 	int								beforeMoveDirection;				// 이건 다음이 벽에 충돌인경우 현재 방향을 저장함
-	Sprite*						character;
+	Sprite*                         character;
 	void moveCharacter(float);
 	void createCharacter();
 
@@ -91,7 +90,7 @@ public:
 
 
 	/*												: pineoc */
-	TMXObjectGroup *				foods;							// group for foods object
+	TMXObjectGroup *			foods;							// group for foods object
 	Array*						onCheckFoodDisplay;				// 위에 음식을 먹었는지 안먹었는지 체크할 배열,	
 	void createFood();												//food create item, (point, imageName)
 	bool checkDup(Sprite*);										// check duplication about tile
@@ -134,8 +133,8 @@ public:
 	Animate*						animate;
 	Action *						rep;
 	
-	void doPop(Object* pSender);									//creat popup
-	void doNotification(Object *obj);
+	void doPop(Ref* pSender);									//creat popup
+	void doNotification(Ref* obj);
 	
 	void createItem1();
 	void createItem2();

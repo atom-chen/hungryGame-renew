@@ -136,7 +136,7 @@ bool BuildingScene::init()
 }
 
 // 첫번째 빌딩
-void BuildingScene::menuBuild1Callback(Object* pSender)
+void BuildingScene::menuBuild1Callback(Ref* pSender)
 {
 	music m;
 	char buf[4];
@@ -145,13 +145,13 @@ void BuildingScene::menuBuild1Callback(Object* pSender)
 	buildingNum = 10;
 	sprintf(buf,"%d",buildingNum);
 	String* popParam=String::create(buf);
-	NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
+	__NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
 	
 	Director::getInstance()->replaceScene(pScene);
 }
 
 //두번째 빌딩
-void BuildingScene::menuBuild2Callback(Object* pSender)
+void BuildingScene::menuBuild2Callback(Ref* pSender)
 {
 	music m;
 	char buf[4];
@@ -160,13 +160,13 @@ void BuildingScene::menuBuild2Callback(Object* pSender)
 	buildingNum = 20;
 	sprintf(buf,"%d",buildingNum);
 	String* popParam=String::create(buf);
-	NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
+	__NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
 	
 	Director::getInstance()->replaceScene(pScene);
 }
 
 //세번째 빌딩
-void BuildingScene::menuBuild3Callback(Object* pSender)
+void BuildingScene::menuBuild3Callback(Ref* pSender)
 {
 	music m;
 	char buf[4];
@@ -175,13 +175,13 @@ void BuildingScene::menuBuild3Callback(Object* pSender)
 	buildingNum = 30;
 	sprintf(buf,"%d",buildingNum);
 	String* popParam=String::create(buf);
-	NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
+	__NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
 	
 	Director::getInstance()->replaceScene(pScene);
 }
 
 //네번째 빌딩
-void BuildingScene::menuBuild4Callback(Object* pSender)
+void BuildingScene::menuBuild4Callback(Ref* pSender)
 {
 	music m;
 	char buf[4];
@@ -190,13 +190,13 @@ void BuildingScene::menuBuild4Callback(Object* pSender)
 	buildingNum = 40;
 	sprintf(buf,"%d",buildingNum);
 	String* popParam=String::create(buf);
-	NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
+	__NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
 	
 	Director::getInstance()->replaceScene(pScene);
 }
 
 //되돌아가기
-void BuildingScene::menuGoBackCallback(Object* pSender)
+void BuildingScene::menuGoBackCallback(Ref* pSender)
 {
 	music m;
 	m.effectStart("sound/effect_btn_click.mp3");
