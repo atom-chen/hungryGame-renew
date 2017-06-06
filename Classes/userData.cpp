@@ -8,7 +8,7 @@ userData::userData()
 	// 다음의 5가지 타입에 대해 읽기/쓰기를 지원합니다.
 	// bool, int, float, double, string
 
-	CCUserDefault *pUserDefault = CCUserDefault::sharedUserDefault();
+	UserDefault *pUserDefault = UserDefault::getInstance();
 
 	// 각 옵션의 상태를 읽어옵니다.
 	// 인자값은 1:KEY, 2: dEFAULT VALUE인데
@@ -32,7 +32,7 @@ userData::~userData()
 // 변경된 맴버 변수 옵션값을 설정 파일에 저장합니다.
 void userData::setOption()
 {
-	CCUserDefault *pUserDefault = CCUserDefault::sharedUserDefault();
+	UserDefault *pUserDefault = UserDefault::getInstance();
 
 	pUserDefault->setBoolForKey(gOptionKey[BGMSOUND],BGMONOFF);
 	pUserDefault->setBoolForKey(gOptionKey[EFFECTSOUND],EFFECTONOFF);

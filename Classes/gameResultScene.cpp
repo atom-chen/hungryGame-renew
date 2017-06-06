@@ -12,7 +12,7 @@ gameResultScene::gameResultScene(std::string _result,int _stageidx,int _count)
 
 bool gameResultScene::init()
 {
-	if(!CCLayerColor::initWithColor(Color4B::WHITE))
+	if(!LayerColor::initWithColor(Color4B::WHITE))
 		return false;
 	
 	Size size = Director::getInstance()->getWinSize();
@@ -83,7 +83,7 @@ void gameResultScene::make_foodSprite()
 
 		Vec2 position = Vec2(winSize.width*x,winSize.height*y);
 		std::string food_arr = StringUtils::format("img/food/%d_f.png",stageidx);
-		Texture2D *texture = TextureCache::sharedTextureCache()->addImage(food_arr);
+        Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(food_arr);
 		Sprite* foodsprite = Sprite::createWithTexture(texture, Rect(100*(i%5),100*(i/5),100,100));
 
 		foodsprite->setAnchorPoint(Vec2(0,0));
@@ -107,7 +107,7 @@ void gameResultScene::make_foodSprite()
 		} else resultOfStage = 0;
 }
 
-void gameResultScene::menu_goEndScene(Object* pSender)
+void gameResultScene::menu_goEndScene(Ref* pSender)
 {
 	Scene *pScene = Scene::create();
 	gameEndScene *layer = new gameEndScene(resultOfStage,stageidx);

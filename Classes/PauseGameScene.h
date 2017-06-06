@@ -26,14 +26,14 @@ public:
 	int pStageidx;// integer for regame 
 
 	//메뉴 4가지
-	void goMain( Object* pSender );	//메인으로
-	void newGame( Object* pSender );	//새게임
-	void goHelp ( Object* pSender );	//도움말
-	void doClose( Object* pSender );	//이어하기
+	void goMain(Ref* pSender );	//메인으로
+	void newGame(Ref* pSender );	//새게임
+	void goHelp (Ref* pSender );	//도움말
+	void doClose(Ref* pSender );	//이어하기
 	
 	void setStageIdx(int num); // set stage index 
 	
-	void menuPauseCallback (Object* pSender);	//콜백
+	void menuPauseCallback (Ref* pSender);	//콜백
 };
 
 #endif

@@ -185,7 +185,7 @@ bool gameScene::init()
 
 
 	/* Add notification			: jiyoon */
-	NotificationCenter::getInstance()->addObserver(this,
+	__NotificationCenter::getInstance()->addObserver(this,
 		callfuncO_selector(gameScene::doNotification),
 		"notification", NULL);
 	//"notification"이라는 메시지가 오면 해당 함수를 실행한다.
@@ -561,7 +561,6 @@ bool gameScene::checkDup(Sprite* checkfood)
 void gameScene::updateFoodSprite(float dt)
 {
     Vector<Sprite*> foodToDelete;
-	Size size = Director::getInstance()->getVisibleSize();
 	//CCARRAY_FOREACH(foodSpriteArray, foodobject)
     for(int i=0;i<foodcount;i++)
 	{
@@ -753,7 +752,7 @@ void gameScene::go_endResultScene(int chk)
 void gameScene::checkFoodToEnd()
 {//string result = ?
     std::string c;
-	int count = foodFollowArray.size();
+	int count = (int)foodFollowArray.size();
 	for(int i=0;i<count;i++)
 	{
 		Sprite* a = ((Sprite*)foodFollowArray.at(i));
@@ -844,7 +843,7 @@ void gameScene::doNotification(Object *obj)
 void gameScene::onExit()
 {
 	Layer::onExit();
-	NotificationCenter::sharedNotificationCenter()->removeObserver(this, "notification");
+	__NotificationCenter::getInstance()->removeObserver(this, "notification");
 }
 
 /*
@@ -1208,7 +1207,6 @@ void gameScene::decreaseGaugeBar(int num)
 	{
 		gaugeHeart->setPositionX(size.width - (20 + num));		// num 값 만큼 감소시킴.	
 	}
-
 	else
 	{
 		//게임을 끝낸다
@@ -1236,7 +1234,6 @@ void gameScene::increaseGaugeBar(int num)
 	{
 		gaugeHeart->setPositionX(size.width - (20 - num));		// num 값 만큼 증가시킴.	
 	}
-
 	else
 	{
 		//게임을 끝낸다

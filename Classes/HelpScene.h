@@ -15,7 +15,7 @@ public:
     // there's no 'id' in cpp, so we recommand to return the exactly class pointer
     static cocos2d::Scene* createScene();
 
-	void menu_closeHelpScene(Object*); // µµ¿ò¸»Ã¢À» ´ÝÀ½
+	void menu_closeHelpScene(Ref*); // µµ¿ò¸»Ã¢À» ´ÝÀ½
 
 	CREATE_FUNC(HelpScene);
 

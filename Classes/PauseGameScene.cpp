@@ -23,11 +23,11 @@ bool PauseGameScene::init()
 
 
 	String* popParam=String::create("0");
-	NotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
+	__NotificationCenter::getInstance()->postNotification("notification", popParam);         //노티피케이션 보내기
 
 	winSize=Director::getInstance()->getWinSize();
 
-	CCSprite *bg = Sprite::create("img/pause/pause_bg.png");
+	Sprite *bg = Sprite::create("img/pause/pause_bg.png");
 	bg->setScale(0.5);
 	bg->setPosition(Vec2(winSize.width/2,winSize.height/2));
 	this->addChild(bg,0);
@@ -69,18 +69,18 @@ bool PauseGameScene::init()
 }
 
 
-void PauseGameScene::goMain( Object* pSender )
+void PauseGameScene::goMain(Ref* pSender )
 {
 	//처음 메인화면으로
 	/*CCScene *pScene = Main::scene();
 
 	Director::sharedDirector()->pushScene(pScene);*/
 	String* popParam=String::create("2");
-	NotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
+	__NotificationCenter::getInstance()->postNotification("notification", popParam);         //노티피케이션 보내기
 	this->removeFromParentAndCleanup(true);
 }
 
-void PauseGameScene::goHelp( Object* pSender )
+void PauseGameScene::goHelp( Ref* pSender )
 {
 	//도움말 화면으로
 	Scene *pScene = HelpScene::createScene();
@@ -89,21 +89,21 @@ void PauseGameScene::goHelp( Object* pSender )
 	
 }
 
-void PauseGameScene::newGame( Object* pSender )
+void PauseGameScene::newGame(Ref* pSender )
 {
 	//게임화면 초기화
     std::string a = StringUtils::format("%d", pStageidx);
 	String* popParam=String::create(a);
-	NotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
+	__NotificationCenter::getInstance()->postNotification("notification", popParam);         //노티피케이션 보내기
 	this->removeFromParentAndCleanup(true);
 
 }
 
-void PauseGameScene::doClose(CCObject* pSender)
+void PauseGameScene::doClose(Ref* pSender)
 {
 	//팝업창 닫고 게임 이어하기
 	String* popParam=String::create("1");
-	NotificationCenter::sharedNotificationCenter()->postNotification("notification", popParam);         //노티피케이션 보내기
+	__NotificationCenter::getInstance()->postNotification("notification", popParam);         //노티피케이션 보내기
 	this->removeFromParentAndCleanup(true);		//팝업창 제거
 
 }

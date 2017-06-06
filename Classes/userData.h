@@ -7,8 +7,8 @@
 * http://cozycoz.egloos.com/11046044
 */
 
-#ifndef User_data_h
-#define User_Data_h
+#ifndef USER_DATA_h
+#define USER_DATA_h
 
 #include "cocos2d.h"
 

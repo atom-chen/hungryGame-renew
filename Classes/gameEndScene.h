@@ -19,10 +19,10 @@ public:
 	//static cocos2d::CCScene* scene();
 	//CREATE_FUNC(gameEndScene);
 
-	void menu_retry(Object*);// retry game
-	void menu_backtoStageScene(Object*);//back to stageScene
-	void menu_nextStage(Object*);//go to next stage
-	void check_point_star(Object*);//check the point to make star
+	void menu_retry(Ref*);// retry game
+	void menu_backtoStageScene(Ref*);//back to stageScene
+	void menu_nextStage(Ref*);//go to next stage
+	void check_point_star(Ref*);//check the point to make star
 	void lastStageSet();
 
 	int result; // game result, success or fail, success = 1, fail = 0

@@ -14,11 +14,11 @@ public:
     static cocos2d::Scene* createScene();
     
     // a selector callback
-    void menuBuild1Callback(cocos2d::Object* pSender);
-	void menuBuild2Callback(cocos2d::Object* pSender);
-	void menuBuild3Callback(cocos2d::Object* pSender);
-	void menuBuild4Callback(cocos2d::Object* pSender);
-	void menuGoBackCallback(cocos2d::Object* pSender);
+    void menuBuild1Callback(cocos2d::Ref* pSender);
+	void menuBuild2Callback(cocos2d::Ref* pSender);
+	void menuBuild3Callback(cocos2d::Ref* pSender);
+	void menuBuild4Callback(cocos2d::Ref* pSender);
+	void menuGoBackCallback(cocos2d::Ref* pSender);
 
 	int buildingNum;
 

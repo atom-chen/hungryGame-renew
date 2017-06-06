@@ -10,7 +10,7 @@ public:
 
 	static cocos2d::Scene* createScene();
 
-    void doClose( cocos2d::Object* obj);
+    void doClose(cocos2d::Ref* obj);
 
 	CREATE_FUNC(MakerInfoScene);
 

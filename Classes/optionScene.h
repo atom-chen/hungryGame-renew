@@ -21,11 +21,11 @@ public:
     virtual bool init();  
 
     // there's no 'id' in cpp, so we recommand to return the exactly class pointer
-    static cocos2d::Scene* scene();
+    static cocos2d::Scene* createScene();
 
-	void goBackMenu(Object*); // go back to menu
+	void goBackMenu(Ref*); // go back to menu
 
-	void OnOffMenu(Object*);	// set Music ON or OFF
+	void OnOffMenu(Ref*);	// set Music ON or OFF
 
 	CREATE_FUNC(OptionScene);
 

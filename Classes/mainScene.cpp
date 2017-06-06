@@ -123,7 +123,7 @@ bool mainScene::init()
     return true;
 }
 
-void mainScene::menuCloseCallback(Object* pSender)
+void mainScene::menuCloseCallback(Ref* pSender)
 {
     // "close" menu item clicked
 	music m;
@@ -131,16 +131,16 @@ void mainScene::menuCloseCallback(Object* pSender)
     Director::getInstance()->end();
 }
 
-void mainScene::menuOptionCallback(Object* pSender)
+void mainScene::menuOptionCallback(Ref* pSender)
 {
 	music m;
 	m.effectStart("sound/effect_btn_click.mp3");
-	Scene *pScene = OptionScene::scene();
+	Scene *pScene = OptionScene::createScene();
 
 	Director::getInstance()->replaceScene(pScene);
 }
 
-void mainScene::menuHelpCallback(Object* pSender)
+void mainScene::menuHelpCallback(Ref* pSender)
 {// pineoc's help 구현. HelpScene클래스 사용.
 	music m;
 	m.effectStart("sound/effect_btn_click.mp3");
@@ -149,7 +149,7 @@ void mainScene::menuHelpCallback(Object* pSender)
 	Director::getInstance()->pushScene(pScene);
 }
 
-void mainScene::menuStartCallback(Object* pSender)
+void mainScene::menuStartCallback(Ref* pSender)
 {
 	music m;
 	m.effectStart("sound/effect_btn_click.mp3");
@@ -158,7 +158,7 @@ void mainScene::menuStartCallback(Object* pSender)
 	Director::getInstance()->replaceScene(pScene);
 }
 
-void mainScene::menuDevCallback(Object* pSender)
+void mainScene::menuDevCallback(Ref* pSender)
 {
 	music m;
 	m.effectStart("sound/effect_btn_click.mp3");
