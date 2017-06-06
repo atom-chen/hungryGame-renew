@@ -20,7 +20,7 @@ main, ingame, game end
 - finish the shopping!
 
 
-##Framework & Libs
+## Framework & Libs
 - Cocos2d-x 3.x
 
 ## Target Platform
@@ -28,7 +28,7 @@ main, ingame, game end
 - iOS
 
 ## Getting Started
-1. clone this project 
+1. clone this project
 
 2. excute cocos command, make project
 
@@ -37,9 +37,7 @@ main, ingame, game end
 3. copy .git directory, .gitignore file to hungrygame directory
 
 ## Collaborators
-- pineoc
+- @pineoc
 - blackbell1540
 - ICoi
 - euntas
-
-
