@@ -30,14 +30,20 @@ main, ingame, game end
 ## Getting Started
 1. clone this project
 
-2. excute cocos command, make project
-
+2. run cocos command, make project
+```
   $cocos new -p com.company.hungrygame -l cpp hungrygame
+```
 
 3. copy .git directory, .gitignore file to hungrygame directory
 
+4. git pull from repo
+```
+$git pull
+```
+
 ## Collaborators
-- @pineoc
+- pineoc
 - blackbell1540
 - ICoi
 - euntas
