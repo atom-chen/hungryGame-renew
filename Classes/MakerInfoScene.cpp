@@ -1,4 +1,5 @@
 #include "MakerInfoScene.h"
+#include "mainScene.h"
 
 using namespace cocos2d;
 
@@ -42,7 +43,9 @@ bool MakerInfoScene::init()
 }
 
 
-void MakerInfoScene::doClose( Object* pSender )
+void MakerInfoScene::doClose(Ref* pSender )
 {
-	Director::getInstance()->popScene();
+    auto scene = mainScene::createScene();
+    auto trans = TransitionFade::create(0.5, scene);
+    Director::getInstance()->replaceScene(trans);
 }
