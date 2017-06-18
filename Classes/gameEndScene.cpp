@@ -1,5 +1,5 @@
 /*
-pineoc@naver.com // ÀÌÀ±¼®
+pineoc@naver.com // Â¿ÃƒÂ¿Â±ÂºÃ†
 game End Scene 
 get result for success Scene or fail Scene 
 */
@@ -11,25 +11,27 @@ get result for success Scene or fail Scene
 
 gameEndScene::gameEndScene(int _result,int _stageidx)
 {
-    if(!LayerColor::initWithColor(Color4B::WHITE))
+    if(! LayerColor::initWithColor(Color4B(242,241,218,255)))
 		return ;
 	result = _result;
 	stageidx = _stageidx;
 
-	Size size = Director::getInstance()->getWinSize();
+	Size size = Director::getInstance()->getVisibleSize();
 
     std::string stagenum = StringUtils::format("img/game/stageNum/%d.png",stageidx-9);
 	Sprite* stageNSprite = Sprite::create(stagenum);
-	stageNSprite->setPosition(Vec2(size.width*0.32,size.height*0.93));
+	stageNSprite->setPosition(Vec2(400, size.height-200));
 	this->addChild(stageNSprite,0);
 
 	Sprite* background = Sprite::create("img/end/endChk_bg.png");
 	background->setPosition(Vec2(size.width/2,size.height/2));
+    background->setScale(size.width/background->getContentSize().width);
 	this->addChild(background,0);
 
     std::string food_arr = StringUtils::format("img/food/%d.png",stageidx);
 	Sprite* foodImage = Sprite::create(food_arr); //by eunji
 	foodImage->setPosition(Vec2(size.width/2,size.height/2));
+    foodImage->setScale(1.7);
 	this->addChild(foodImage,1);
 
 	/*
@@ -40,6 +42,7 @@ gameEndScene::gameEndScene(int _result,int _stageidx)
 		//success image 
 		Sprite *success = Sprite::create("img/end/endChk_success.png");
 		success->setPosition(Vec2(size.width/2, size.height/2));
+        success->setScale(1.7f);
 		this->addChild(success,2);
 
 		//retry button
@@ -77,6 +80,7 @@ gameEndScene::gameEndScene(int _result,int _stageidx)
 
 		Sprite *fail = Sprite::create("img/end/endChk_fail.png");
 		fail->setPosition(Vec2(size.width/2, size.height/2));
+        fail->setScale(1.7f);
 		this->addChild(fail,2);
 
 
@@ -104,35 +108,33 @@ bool gameEndScene::init()
 }
 void gameEndScene::menu_retry(Ref* pSender)
 {
-	
-	//¿©±â¼­ ½ºÅ×ÀÌÁöÀÇ idx°¡Á®¿Í¼­ ´Ù½Ã replace ÇÏ´Â ¹æ½ÄÀ¸·Î °¡¾ßÇÒµí.
+	//Ã¸Â©Â±â€šÂºâ‰  Î©âˆ«â‰ˆâ—ŠÂ¿ÃƒÂ¡Ë†Â¿Â« idxâˆžÂ°Â¡Ã†Ã¸Ã•Âºâ‰  Â¥Å¸Î©âˆš replace Â«Å“Â¥Â¬ Ï€ÃŠÎ©Æ’Â¿âˆâˆ‘Å’ âˆžÂ°Ã¦ï¬‚Â«â€œÂµÃŒ.
 	Scene *pScene = gameScene::createScene();
-	Director::getInstance()->replaceScene(pScene);
+    auto trans = TransitionFade::create(0.5, pScene);
+	Director::getInstance()->replaceScene(trans);
 
 }
 void gameEndScene::menu_nextStage(Ref* pSender)
 {
-	
-	//½ºÅ×ÀÌÁöÀÇ idx¸¦ °¡Á®¿Í¼­ idx+1 ÇÏ¿© ´ÙÀ½ ½ºÅ×ÀÌÁö¸¦ °¡Á®¿À°Ô²û ÇØ¾ßÇÒ µí.
-	
-	if(stageidx == 18 || stageidx==28 || stageidx==38)
+	if(stageidx==18 || stageidx==28 || stageidx==38)
 		UserDefault::getInstance()->setIntegerForKey("curStage",stageidx+2);
 	else
 		UserDefault::getInstance()->setIntegerForKey("curStage",stageidx+1);
 	UserDefault::getInstance()->flush();
     
 	Scene *pScene = gameScene::createScene();
-	Director::getInstance()->replaceScene(pScene);
+    auto trans = TransitionFade::create(0.5, pScene);
+	Director::getInstance()->replaceScene(trans);
 }
 void gameEndScene::menu_backtoStageScene(Ref* pSender)
 {
 	/*
-	½ºÅ×ÀÌÁö ¼±ÅÃÇÏ´Â SceneÀ¸·Î ³Ñ¾î°¨.
+	Î©âˆ«â‰ˆâ—ŠÂ¿ÃƒÂ¡Ë† ÂºÂ±â‰ˆâˆšÂ«Å“Â¥Â¬ SceneÂ¿âˆâˆ‘Å’ â‰¥â€”Ã¦Ã“âˆžÂ®.
 	back to selectstage Scene
 	*/
 	Scene *pScene = BuildingScene::createScene();
-
-	Director::getInstance()->replaceScene(pScene);
+    auto trans = TransitionFade::create(0.5, pScene);
+	Director::getInstance()->replaceScene(trans);
 }
 void gameEndScene::lastStageSet()
 {

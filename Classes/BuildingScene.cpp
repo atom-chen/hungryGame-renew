@@ -1,5 +1,5 @@
 /*
-	��������â
+	∫Ùµ˘º±≈√√¢
  */
 
 #include "BuildingScene.h"
@@ -28,7 +28,7 @@ Scene* BuildingScene::createScene()
 // on "init" you need to initialize your instance
 bool BuildingScene::init()
 {
-    if(! Layer::init())
+    if(! LayerColor::initWithColor(Color4B(242,241,218,255)))
     {
         return false;
     }
@@ -47,9 +47,9 @@ bool BuildingScene::init()
     
     
     //image scale factor
-    float scaleF = 1.5f;
+    float scaleF = 1.7f;
     
-    //ù��° �ǹ���ư
+    //√ππ¯¬∞ ∞«π∞πˆ∆∞
     MenuItemImage *pBuilding_1 = MenuItemImage::create(
                                                        "img/buildingSelect_btn_b1.png",
                                                        "img/buildingSelect_btn_b1_n.png",
@@ -61,7 +61,7 @@ bool BuildingScene::init()
     pBuilding_1->setScale(scaleF);
     pBuilding_1->setTag(1);
     
-    //�ι�° �ǹ���ư
+    //µŒπ¯¬∞ ∞«π∞πˆ∆∞
     MenuItemImage *pBuilding_2 = MenuItemImage::create(
                                                        "img/buildingSelect_btn_b2.png",
                                                        "img/buildingSelect_btn_b2_n.png",
@@ -95,7 +95,7 @@ bool BuildingScene::init()
     pBuilding_4->setScale(scaleF);
     pBuilding_4->setTag(4);
     
-    //�ǵ��ư��� ��ư
+    //µ«µπæ∆∞°±‚ πˆ∆∞
     MenuItemImage *pGoBack = MenuItemImage::create(
                                                    "img/btn_goBack.png",
                                                    "img/btn_goBack_n.png",
@@ -124,11 +124,12 @@ void BuildingScene::menuBuildFunction(cocos2d::Ref *pSender)
     String* popParam = String::create(StringUtils::format("%d",buildingNum));
     __NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
     
-    Director::getInstance()->replaceScene(pScene);
+    auto trans = TransitionFade::create(0.5, pScene);
+    Director::getInstance()->replaceScene(trans);
     
 }
 
-//�ǵ��ư���
+//µ«µπæ∆∞°±‚
 void BuildingScene::menuGoBackCallback(Ref* pSender)
 {
     music m;

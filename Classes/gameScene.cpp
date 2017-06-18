@@ -58,7 +58,7 @@ Scene* gameScene::createScene()
 */
 bool gameScene::init()
 {
-    if(!LayerColor::initWithColor(Color4B::WHITE))
+    if(! LayerColor::initWithColor(Color4B(242,241,218,255)))
 		return false;
     
     auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -78,7 +78,7 @@ bool gameScene::init()
 	music m;
 	m.effectStart("sound/effect_supermarket.mp3");
 
-	Size size = Director::getInstance()->getWinSize();
+	Size size = Director::getInstance()->getVisibleSize();
 
 	/* Set background img		: Daun */
 	Sprite* bg = Sprite::create("img/game/game_bg.png");
@@ -97,12 +97,12 @@ bool gameScene::init()
 	this->addChild(tileLayer);
 
 	tileMap = TMXTiledMap::create(map);
-	tileMap->setPosition(MOVEX , MOVEY);
+    tileMap->setAnchorPoint(Vec2(0.5, 0.5));
+	tileMap->setPosition(Vec2(size.width/2, size.height/2));
+    tileMap->setScale(1.5);
 	if(tileMap->getLayer("wall"))
 		backgroundLayer = tileMap->getLayer("wall");
-
-	//metainfo¿¡ ÁØ Å¸ÀÏ·¹ÀÌ¾î ÀÌ¸§Àº ItemsÀÌÁö¸¸ º®Ç¥½Ã À§ÇÑ »¡°£·¹ÀÌ¾îÀÓ.
-	// ÃßÈÄ ½ÇÁ¦ ¾ÆÀÌÅÛÀ» Æ÷ÇÔ ÇÒ ¼öµµ ÀÖÀ½.
+    
 	if(tileMap->getLayer("Items"))
 	{
 		metainfo = tileMap->getLayer("Items");
@@ -152,9 +152,9 @@ bool gameScene::init()
 		this->createObstacle();
 
 		countNum = 0;
-		checkObDirection = false; //false : ¿À¸¥ÂÊ true : ¿ÞÂÊ
+		checkObDirection = false; //false : Ã¸Â¿âˆâ€¢Â¬Â  true : Ã¸ï¬Â¬Â 
 
-		this->schedule(schedule_selector(gameScene::moveObstacleHeight), 1.0f); // ¿òÁ÷ÀÌ´Â Àå¾Ö¹° ±¸Çö
+		this->schedule(schedule_selector(gameScene::moveObstacleHeight), 1.0f); // Ã¸ÃšÂ¡ËœÂ¿ÃƒÂ¥Â¬ Â¿Ã‚Ã¦Ã·Ï€âˆž Â±âˆÂ«Ë†
 	}
 
 
@@ -188,7 +188,7 @@ bool gameScene::init()
 	__NotificationCenter::getInstance()->addObserver(this,
 		callfuncO_selector(gameScene::doNotification),
 		"notification", NULL);
-	//"notification"ÀÌ¶ó´Â ¸Þ½ÃÁö°¡ ¿À¸é ÇØ´ç ÇÔ¼ö¸¦ ½ÇÇàÇÑ´Ù.
+	//"notification"Â¿Ãƒâˆ‚Ã›Â¥Â¬ âˆï¬Î©âˆšÂ¡Ë†âˆžÂ° Ã¸Â¿âˆÃˆ Â«Ã¿Â¥Ã Â«â€˜ÂºË†âˆÂ¶ Î©Â«Â«â€¡Â«â€”Â¥Å¸.
 
 
 
@@ -286,7 +286,7 @@ void gameScene::createObstacle()
 {
 	Texture2D *obTexture = Director::getInstance()->getTextureCache()->addImage("map/meat.png");
 
-	obstacle = Sprite::createWithTexture(obTexture, Rect(0, 0, 60, 60)); // ¸Ê¿¡ ¸ÂÃç ¼ýÀÚ ¹Ù²ã¾ßÇÔ
+	obstacle = Sprite::createWithTexture(obTexture, Rect(0, 0, 60, 60)); // âˆÂ Ã¸Â° âˆÂ¬âˆšÃ ÂºËÂ¿â„ Ï€Å¸â‰¤â€žÃ¦ï¬‚Â«â€˜
 	obstacle->setPosition(obstaclePosition);
 	obstacle->setAnchorPoint(Vec2(0,0));
 	this->addChild(obstacle);
@@ -351,7 +351,7 @@ void gameScene::moveCharacter(float dt)
 		&& playerPos.y >= 0
 		&& playerPos.x >= 0 )
 	{
-		// Ä³¸¯ÅÍ°¡ ÀÌµ¿ÇÒ À§Ä¡°¡ ¸Ê ¾ÈÀÎ°æ¿ì º®¿¡ Ãæµ¹ÇÞ´ÂÁö¸¦ °Ë»çÇÕ´Ï´Ù By Daun
+		// Æ’â‰¥âˆÃ˜â‰ˆÃ•âˆžÂ° Â¿ÃƒÂµÃ¸Â«â€œ Â¿ÃŸÆ’Â°âˆžÂ° âˆÂ  Ã¦Â»Â¿Å’âˆžÃŠÃ¸Ã âˆ«Ã†Ã¸Â° âˆšÃŠÂµÏ€Â«ï¬Â¥Â¬Â¡Ë†âˆÂ¶ âˆžÃ€ÂªÃÂ«â€™Â¥Å“Â¥Å¸ By Daun
 		Vec2 tileCoord = this->tileCoorPosition(playerPos);
 
 		int tileGidforWall = this->metainfo->getTileGIDAt(tileCoord);
@@ -376,7 +376,7 @@ void gameScene::moveCharacter(float dt)
 	}
 	else
 	{
-		// Ä³¸¯ÅÍ°¡ ÀÌµ¿ÇÒ À§Ä¡°¡ ¸Ê ¹ÛÀÌ¹Ç·Î º®¿¡ Ãæµ¹ÇÑ °Í°ú ¸¶Âù°¡ÁöÀÔ´Ï´Ù.
+		// Æ’â‰¥âˆÃ˜â‰ˆÃ•âˆžÂ° Â¿ÃƒÂµÃ¸Â«â€œ Â¿ÃŸÆ’Â°âˆžÂ° âˆÂ  Ï€â‚¬Â¿ÃƒÏ€Â«âˆ‘Å’ âˆ«Ã†Ã¸Â° âˆšÃŠÂµÏ€Â«â€” âˆžÃ•âˆžË™ âˆâˆ‚Â¬Ë˜âˆžÂ°Â¡Ë†Â¿â€˜Â¥Å“Â¥Å¸.
 		checkCrash = CrashWithWall;
 		moveDirection = (moveDirection + 2 ) % 4;
 	}
@@ -392,11 +392,11 @@ void gameScene::moveCharacter(float dt)
 		Size size = Director::getInstance()->getWinSize();
 		if(isSuper==false)
 		{
-			// º®°ú Ãæµ¹ÇÑ °æ¿ì ÇØ¾ßÇÒ ÀÏ
-			character->setPosition(originalplayerPos);							// By Daun.. Ãæµ¹ÀÎ °æ¿ì ¿ø·¡ À§Ä¡·Î °è½ï À¯Áö
+			// âˆ«Ã†âˆžË™ âˆšÃŠÂµÏ€Â«â€” âˆžÃŠÃ¸Ã Â«Ã¿Ã¦ï¬‚Â«â€œ Â¿Å“
+			character->setPosition(originalplayerPos);							// By Daun.. âˆšÃŠÂµÏ€Â¿Å’ âˆžÃŠÃ¸Ã Ã¸Â¯âˆ‘Â° Â¿ÃŸÆ’Â°âˆ‘Å’ âˆžÃ‹Î©Ã” Â¿Ã˜Â¡Ë†
 			character_XP -= 10;
 
-			int gaugeSize_part = 441/10;										// °ÔÀÌÁö¹Ù »çÀÌÁîÀÇ 10ÆÛ¼¾Æ® ±æÀÌ
+			int gaugeSize_part = 441/10;										// âˆžâ€˜Â¿ÃƒÂ¡Ë†Ï€Å¸ ÂªÃÂ¿ÃƒÂ¡Ã“Â¿Â« 10âˆ†â‚¬ÂºÃ¦âˆ†Ã† Â±ÃŠÂ¿Ãƒ
 			int gaugeNum = (gaugeSize_part * ((100 - character_XP) / 10));
 
 
@@ -411,7 +411,7 @@ void gameScene::moveCharacter(float dt)
 			&& playerPos.y >= 0
 			&& playerPos.x >= 0 )
 		{
-			character->setPosition( playerPos );							// Ä³¸¯ÅÍÀÇ »õ·Î¿î À§Ä¡ ÁöÁ¤
+			character->setPosition( playerPos );							// Æ’â‰¥âˆÃ˜â‰ˆÃ•Â¿Â« ÂªÄ±âˆ‘Å’Ã¸Ã“ Â¿ÃŸÆ’Â° Â¡Ë†Â¡Â§
 		}
 	}
 
@@ -430,7 +430,7 @@ void gameScene::moveCharacter(float dt)
 void gameScene::createCharacter()
 {
 
-	Size size = Director::getInstance()->getWinSize();
+	Size size = Director::getInstance()->getVisibleSize();
 
 
 	TMXObjectGroup *object = tileMap->getObjectGroup("object");
@@ -453,8 +453,8 @@ void gameScene::createCharacter()
 
 	// character->setScale(0.05);
 	character->setPosition(characterPosition);
-	//character->setFlipX(true); // XÃà ±âÁØÀ¸·Î ¹ÝÀü
-	//character->setFlipY(true);	// YÃà ±âÁØÀ¸·Î ¹ÝÀü
+	//character->setFlipX(true); // Xâˆšâ€¡ Â±â€šÂ¡Ã¿Â¿âˆâˆ‘Å’ Ï€â€ºÂ¿Â¸
+	//character->setFlipY(true);	// Yâˆšâ€¡ Â±â€šÂ¡Ã¿Â¿âˆâˆ‘Å’ Ï€â€ºÂ¿Â¸
 
 	animate = Animate::create(animation);
 	rep = RepeatForever::create(animate);
@@ -601,7 +601,7 @@ void gameScene::updateFoodSprite(float dt)
 */
 void gameScene::checkFollowFoodCollision(float dt)
 {
-	Object* foodobject = NULL;
+	Ref* foodobject = NULL;
 	Size size = Director::getInstance()->getWinSize();
 	//CCARRAY_FOREACH(foodFollowArray,foodobject)
     for(int i=0;i<foodFollowArray.size();i++)
@@ -791,7 +791,7 @@ void gameScene::goRegame(int stage)
 * Latest										2013. 10. 03
 * Made											jiyoon
 */
-void gameScene::doPop(Object* pSender)
+void gameScene::doPop(Ref* pSender)
 {
 	//Director::sharedDirector()->getTouchDispatcher()->removeDelegate(this);		//set touch enable
     UserDefault::getInstance()->setIntegerForKey("curStage",gStageidx);
@@ -809,14 +809,14 @@ void gameScene::doPop(Object* pSender)
 * Latest										2013. 10. 03
 * Made											jiyoon
 */
-void gameScene::doNotification(Object *obj)
+void gameScene::doNotification(Ref *obj)
 {
-	//³ëÆ¼ÇÇÄÉÀÌ¼Ç ¹Þ±â
+	//â‰¥ÃŽâˆ†ÂºÂ«Â«Æ’â€¦Â¿ÃƒÂºÂ« Ï€ï¬Â±â€š
     String* pParam=(String*)obj;
 	int flag = pParam->intValue();
 	if(flag==1)
 	{
-		Director::getInstance()->resume();														//È­¸é Àç½ÃÀÛ
+		Director::getInstance()->resume();														//Â»â‰ âˆÃˆ Â¿ÃÎ©âˆšÂ¿â‚¬
 		//Director::getInstance()->getTouchDispatcher()->addTargetedDelegate(this, 0, true);		// set touch able
 	}
 	else if(flag==2)
@@ -834,8 +834,8 @@ void gameScene::doNotification(Object *obj)
 	else
 	{	
 		//Array* childs = this->getChildren();
-		Director::getInstance()->pause();													//È­¸é Á¤Áö
-		//Director::getInstance()->getTouchDispatcher()->removeDelegate(PauseMenu);			//¸Þ´º¹öÆ° ºñÈ°¼º
+		Director::getInstance()->pause();													//Â»â‰ âˆÃˆ Â¡Â§Â¡Ë†
+		//Director::getInstance()->getTouchDispatcher()->removeDelegate(PauseMenu);			//âˆï¬Â¥âˆ«Ï€Ë†âˆ†âˆž âˆ«Ã’Â»âˆžÂºâˆ«
 	}
 
 }
@@ -991,17 +991,17 @@ void gameScene::check_item(float dt)
 	if(characterRect.intersectsRect(item3Rect))
 	{
 		//pause obstacle effect
-		isPause = true;	//Á¤Áö È°¼ºÈ­
-		count = 0;	//ÃÊ¼¼±â ÃÊ±âÈ­
+		isPause = true;	//Â¡Â§Â¡Ë† Â»âˆžÂºâˆ«Â»â‰ 
+		count = 0;	//âˆšÂ ÂºÂºÂ±â€š âˆšÂ Â±â€šÂ»â‰ 
 		this->removeChild(item3);
 		item3=NULL;
 	}
 	if(characterRect.intersectsRect(item4Rect))
 	{
 		//superwoman effect
-		isSuper = true;	//¹«Àû È°¼ºÈ­
-		count = 0;	//ÃÊ¼¼±â ÃÊ±âÈ­
-		this->schedule(schedule_selector(gameScene::countTime),1.0f);	//ÃÊ¼¼±â ½ÃÀÛ
+		isSuper = true;	//Ï€Â´Â¿Ëš Â»âˆžÂºâˆ«Â»â‰ 
+		count = 0;	//âˆšÂ ÂºÂºÂ±â€š âˆšÂ Â±â€šÂ»â‰ 
+		this->schedule(schedule_selector(gameScene::countTime),1.0f);	//âˆšÂ ÂºÂºÂ±â€š Î©âˆšÂ¿â‚¬
 		this->doParticle();
 		this->removeChild(item4);
 		item4=NULL;
@@ -1149,7 +1149,7 @@ void gameScene::moveObstacleHeight(float dt)
 * Made											eunji
 */
 
-void gameScene::doActionMovingObstacleRight(Object* pSender)
+void gameScene::doActionMovingObstacleRight(Ref* pSender)
 {
 	ActionInterval* moveRight = MoveBy::create(2, Vec2(200, 0));
 
@@ -1165,7 +1165,7 @@ void gameScene::doActionMovingObstacleRight(Object* pSender)
 * Latest										2013. 10. 03
 * Made											eunji
 */
-void gameScene::doActionMovingObstacleLeft(Object* pSender)
+void gameScene::doActionMovingObstacleLeft(Ref* pSender)
 {
 	ActionInterval* moveLeft = MoveBy::create(2, Vec2(-80, 0));
 
@@ -1180,7 +1180,7 @@ void gameScene::doActionMovingObstacleLeft(Object* pSender)
 * Latest										2013. 10. 03
 * Made											eunji
 */
-void gameScene::doActionMovingObstacleReverse(Object* pSender)
+void gameScene::doActionMovingObstacleReverse(Ref* pSender)
 {
 	ActionInterval* moveRight = MoveBy::create(2, Vec2(80, 0));
 	ActionInterval* moveReverse = moveRight->reverse();
@@ -1200,16 +1200,16 @@ void gameScene::doActionMovingObstacleReverse(Object* pSender)
 
 void gameScene::decreaseGaugeBar(int num)
 {
-	//x = 20 Àº ÃÊ±â»óÅÂ(¿¡³ÊÁö°¡ 0ÀÎ »óÅÂ)
+	//x = 20 Â¿âˆ« âˆšÂ Â±â€šÂªÃ›â‰ˆÂ¬(Ã¸Â°â‰¥Â Â¡Ë†âˆžÂ° 0Â¿Å’ ÂªÃ›â‰ˆÂ¬)
 	Size size = Director::getInstance()->getWinSize();
 
 	if( character_XP > 0 )
 	{
-		gaugeHeart->setPositionX(size.width - (20 + num));		// num °ª ¸¸Å­ °¨¼Ò½ÃÅ´.	
+		gaugeHeart->setPositionX(size.width - (20 + num));		// num âˆžâ„¢ âˆâˆâ‰ˆâ‰  âˆžÂ®Âºâ€œÎ©âˆšâ‰ˆÂ¥.	
 	}
 	else
 	{
-		//°ÔÀÓÀ» ³¡³½´Ù
+		//âˆžâ€˜Â¿â€Â¿Âª â‰¥Â°â‰¥Î©Â¥Å¸
 		gaugeHeart->setPositionX(20);
 		this->go_endResultScene(0);
 	}
@@ -1227,16 +1227,16 @@ void gameScene::decreaseGaugeBar(int num)
 
 void gameScene::increaseGaugeBar(int num)
 {
-	//x = 20 Àº ÃÊ±â»óÅÂ(¿¡³ÊÁö°¡ 0ÀÎ »óÅÂ)
+	//x = 20 Â¿âˆ« âˆšÂ Â±â€šÂªÃ›â‰ˆÂ¬(Ã¸Â°â‰¥Â Â¡Ë†âˆžÂ° 0Â¿Å’ ÂªÃ›â‰ˆÂ¬)
 	Size size = Director::getInstance()->getWinSize();
 
 	if( character_XP < (460 - num) )
 	{
-		gaugeHeart->setPositionX(size.width - (20 - num));		// num °ª ¸¸Å­ Áõ°¡½ÃÅ´.	
+		gaugeHeart->setPositionX(size.width - (20 - num));		// num âˆžâ„¢ âˆâˆâ‰ˆâ‰  Â¡Ä±âˆžÂ°Î©âˆšâ‰ˆÂ¥.	
 	}
 	else
 	{
-		//°ÔÀÓÀ» ³¡³½´Ù
+		//âˆžâ€˜Â¿â€Â¿Âª â‰¥Â°â‰¥Î©Â¥Å¸
 		gaugeHeart->setPositionX(460);
 		this->go_endResultScene(0);
 	}

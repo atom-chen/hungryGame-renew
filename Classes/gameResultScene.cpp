@@ -12,13 +12,14 @@ gameResultScene::gameResultScene(std::string _result,int _stageidx,int _count)
 
 bool gameResultScene::init()
 {
-	if(!LayerColor::initWithColor(Color4B::WHITE))
+	if(! LayerColor::initWithColor(Color4B(242,241,218,255)))
 		return false;
 	
-	Size size = Director::getInstance()->getWinSize();
+	Size size = Director::getInstance()->getVisibleSize();
 
 	Sprite* background = Sprite::create("img/endResult/end_bg.png");
 	background->setPosition(Vec2(size.width/2,size.height/2));
+    background->setScale(size.width/background->getContentSize().width);
 	this->addChild(background,0);
 
 	std::string stageNum = StringUtils::format("img/game/stageNum/%d.png",stageidx-9);
@@ -27,10 +28,11 @@ bool gameResultScene::init()
 	this->addChild(stageNSprite,0);
 
 	MenuItemImage *btnEnd = MenuItemImage::create(
-		"img/endResult/main_btn_endgame.png", "img/endResult/main_btn_endgame_n.png", this, menu_selector(gameResultScene::menu_goEndScene));
+		"img/endResult/main_btn_endgame.png", "img/endResult/main_btn_endgame_n.png",
+                                                  this, menu_selector(gameResultScene::menu_goEndScene));
 
-	btnEnd->setPosition(Vec2(size.width*0.8, size.height*0.1));
-	btnEnd->setScale(0.8);
+	btnEnd->setPosition(Vec2(size.width-300, 150));
+	btnEnd->setScale(1.7);
 	Menu* endMenu = Menu::create(btnEnd, NULL);
     endMenu->setPosition(Vec2::ZERO);
 
@@ -60,7 +62,7 @@ void gameResultScene::parser()
 
 void gameResultScene::make_foodSprite()
 {//make food sprite using array foodArrayForSprite
-	int successCnt = 0;			//성공한 음식 갯수 저장하는곳
+	int successCnt = 0;
 	double x=0.2;
 	double y=0.65;// for sprite position
 	Size winSize = Director::getInstance()->getVisibleSize();
@@ -75,17 +77,12 @@ void gameResultScene::make_foodSprite()
 		{	
 			x=0.6;
 		}
-		
-		/**
-		Daun
-		이미지 뿌리는 부분...
-		**/
 
 		Vec2 position = Vec2(winSize.width*x,winSize.height*y);
 		std::string food_arr = StringUtils::format("img/food/%d_f.png",stageidx);
         Texture2D *texture = Director::getInstance()->getTextureCache()->addImage(food_arr);
 		Sprite* foodsprite = Sprite::createWithTexture(texture, Rect(100*(i%5),100*(i/5),100,100));
-
+        foodsprite->setScale(1.5);
 		foodsprite->setAnchorPoint(Vec2(0,0));
 		foodsprite->setPosition(position);
 
@@ -113,5 +110,6 @@ void gameResultScene::menu_goEndScene(Ref* pSender)
 	gameEndScene *layer = new gameEndScene(resultOfStage,stageidx);
 	layer->autorelease();
 	pScene->addChild(layer);
-	Director::getInstance()->replaceScene(pScene);
+    auto trans = TransitionFade::create(0.5, pScene);
+	Director::getInstance()->replaceScene(trans);
 }

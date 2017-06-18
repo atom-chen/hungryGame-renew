@@ -24,7 +24,7 @@ Scene* OptionScene::createScene()
 
 bool OptionScene::init()
 {
-        if(!LayerColor::initWithColor(Color4B::WHITE))
+        if(! LayerColor::initWithColor(Color4B(242,241,218,255)))
         {
         	return false;
         }
