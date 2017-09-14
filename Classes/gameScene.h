@@ -6,7 +6,7 @@
 * Game Scene
 */
 #include "cocos2d.h"
-#include "SimpleAudioEngine.h"
+#include "ui/CocosGUI.h"
 
 class gameScene : public cocos2d::LayerColor
 {

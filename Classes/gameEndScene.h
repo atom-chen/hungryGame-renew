@@ -7,7 +7,9 @@ get result for success Scene or fail Scene
 
 #pragma once
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 USING_NS_CC;
+
 class gameEndScene : public LayerColor
 {
 public:

@@ -9,6 +9,7 @@
 #define _PauseGameScene_
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
 using namespace cocos2d;
 
 class PauseGameScene : public LayerColor

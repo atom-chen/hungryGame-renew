@@ -6,7 +6,7 @@
 * Stage Select
 */
 #include "cocos2d.h"
-#include "SimpleAudioEngine.h"
+#include "ui/CocosGUI.h"
 
 using namespace cocos2d;
 

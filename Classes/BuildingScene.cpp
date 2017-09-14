@@ -8,6 +8,7 @@
 #include "stageSelectScene.h"
 
 using namespace cocos2d;
+using namespace cocos2d::ui;
 
 Scene* BuildingScene::createScene()
 {
@@ -45,70 +46,38 @@ bool BuildingScene::init()
     // Add the sprite to HelloWorld layer as a child layer.
     this->addChild(pBuildingBg, 0);
     
-    
     //image scale factor
-    float scaleF = 1.7f;
+    float scaleF = 2.0f;
     
-    //√ππ¯¬∞ ∞«π∞πˆ∆∞
-    MenuItemImage *pBuilding_1 = MenuItemImage::create(
-                                                       "img/buildingSelect_btn_b1.png",
-                                                       "img/buildingSelect_btn_b1_n.png",
-                                                       this,
-                                                       menu_selector(BuildingScene::menuBuildFunction));
+    auto game1Btn = Button::create("img/buildingSelect_btn_b1.png", "img/buildingSelect_btn_b1_n.png");
+    game1Btn->setPosition(Vec2(300, 1200));
+    game1Btn->setScale(scaleF);
+    game1Btn->setTag(1);
+    game1Btn->addClickEventListener(CC_CALLBACK_1(BuildingScene::menuBuildFunction, this));
+    this->addChild(game1Btn);
     
-    // Place the menu item bottom-right conner.
-    pBuilding_1->setPosition(Vec2(size.width/3.33, size.height/1.53));
-    pBuilding_1->setScale(scaleF);
-    pBuilding_1->setTag(1);
+    auto game2Btn = Button::create("img/buildingSelect_btn_b2.png", "img/buildingSelect_btn_b2_n.png");
+    game2Btn->setPosition(Vec2(800, 1200));
+    game2Btn->setScale(scaleF);
+    game2Btn->setTag(2);
+    this->addChild(game2Btn);
     
-    //µŒπ¯¬∞ ∞«π∞πˆ∆∞
-    MenuItemImage *pBuilding_2 = MenuItemImage::create(
-                                                       "img/buildingSelect_btn_b2.png",
-                                                       "img/buildingSelect_btn_b2_n.png",
-                                                       this,
-                                                       menu_selector(BuildingScene::menuBuildFunction));
+    auto game3Btn = Button::create("img/buildingSelect_btn_b3.png", "img/buildingSelect_btn_b3_n.png");
+    game3Btn->setPosition(Vec2(300, 600));
+    game3Btn->setScale(scaleF);
+    game3Btn->setTag(3);
+    this->addChild(game3Btn);
     
-    // Place the menu item bottom-right conner.
-    pBuilding_2->setPosition(Vec2(size.width/1.42, size.height/1.53));
-    pBuilding_2->setScale(scaleF);
-    pBuilding_2->setTag(2);
+    auto game4Btn = Button::create("img/buildingSelect_btn_b4.png", "img/buildingSelect_btn_b4_n.png");
+    game4Btn->setPosition(Vec2(800, 600));
+    game4Btn->setScale(scaleF);
+    game4Btn->setTag(4);
+    this->addChild(game4Btn);
     
-    MenuItemImage *pBuilding_3 = MenuItemImage::create(
-                                                       "img/buildingSelect_btn_b3.png",
-                                                       "img/buildingSelect_btn_b3_n.png",
-                                                       this,
-                                                       menu_selector(BuildingScene::menuBuildFunction));
-    
-    // Place the menu item bottom-right conner.
-    pBuilding_3->setPosition(Vec2(size.width/3.33, size.height/3.33));
-    pBuilding_3->setScale(scaleF);
-    pBuilding_3->setTag(3);
-    
-    MenuItemImage *pBuilding_4 = MenuItemImage::create(
-                                                       "img/buildingSelect_btn_b4.png",
-                                                       "img/buildingSelect_btn_b4_n.png",
-                                                       this,
-                                                       menu_selector(BuildingScene::menuBuildFunction));
-    
-    // Place the menu item bottom-right conner.
-    pBuilding_4->setPosition(Vec2(size.width/1.42, size.height/3.33));
-    pBuilding_4->setScale(scaleF);
-    pBuilding_4->setTag(4);
-    
-    //µ«µπæ∆∞°±‚ πˆ∆∞
-    MenuItemImage *pGoBack = MenuItemImage::create(
-                                                   "img/btn_goBack.png",
-                                                   "img/btn_goBack_n.png",
-                                                   this,
-                                                   menu_selector(BuildingScene::menuGoBackCallback));
-    
-    // Place the menu item bottom-right conner.
-    pGoBack->setPosition(Vec2(size.width/1.25, size.height/14.28));
-    pGoBack->setScale(scaleF);
-    
-    Menu* pMenu = Menu::create(pBuilding_1, pBuilding_2, pBuilding_3, pBuilding_4, pGoBack, NULL);
-    pMenu->setPosition(Vec2());
-    this->addChild(pMenu, 1);
+    auto backBtn = Button::create("img/btn_goBack.png", "img/btn_goBack_n.png");
+    backBtn->setPosition(Vec2(200, size.height-200));
+    backBtn->setScale(scaleF);
+    this->addChild(backBtn);
     
     return true;
 }
@@ -116,17 +85,13 @@ bool BuildingScene::init()
 
 void BuildingScene::menuBuildFunction(cocos2d::Ref *pSender)
 {
-    MenuItem *item = (MenuItem*)pSender;
+    Button *item = (Button*)pSender;
     int tag = item->getTag();
-    CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sound/effect_btn_click.mp3");
-    Scene *pScene = stageSelectScene::createScene();
     buildingNum = tag*10;
-    String* popParam = String::create(StringUtils::format("%d",buildingNum));
-    __NotificationCenter::getInstance()->postNotification("BuildingNoti", popParam);
-    
+    // make scene
+    Scene *pScene = stageSelectScene::createScene();
     auto trans = TransitionFade::create(0.5, pScene);
     Director::getInstance()->replaceScene(trans);
-    
 }
 
 //µ«µπæ∆∞°±‚

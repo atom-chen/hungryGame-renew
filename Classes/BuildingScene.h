@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "SimpleAudioEngine.h"
+#include "ui/CocosGUI.h"
 
 class BuildingScene : public cocos2d::LayerColor
 {

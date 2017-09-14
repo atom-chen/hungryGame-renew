@@ -8,6 +8,8 @@
 #define __OPTION_SCENE_H__
 
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
+
 #include "mainScene.h"
 #include "music.h"
 #include "userData.h"
