@@ -11,6 +11,7 @@
 #include "gameScene.h"
 
 using namespace cocos2d;
+using namespace cocos2d::ui;
 
 Scene* stageSelectScene::createScene()
 {
@@ -26,7 +27,6 @@ Scene* stageSelectScene::createScene()
     return scene;
 }
 
-// on "init" you need to initialize your instance
 bool stageSelectScene::init()
 {
     if(! LayerColor::initWithColor(Color4B(242,241,218,255)))
@@ -34,88 +34,57 @@ bool stageSelectScene::init()
         return false;
     }
     
+    //image scale factor
+    const float scaleF = 1.7f;
+    
     Size size = Director::getInstance()->getVisibleSize();
-    //sStageNum = 0;
     
     if(!UserDefault::getInstance()->getIntegerForKey("lastStage"))
     {
-        UserDefault::getInstance()->setIntegerForKey("lastStage",10);
+        UserDefault::getInstance()->setIntegerForKey("lastStage", 10);
         UserDefault::getInstance()->flush();
     }
     
-    //πË∞Ê ¿ÃπÃ¡ˆ ª˝º∫
+    buildingNum = UserDefault::getInstance()->getIntegerForKey("buildingNum");
+    int lastStageNum = UserDefault::getInstance()->getIntegerForKey("lastStage");
+    
     Sprite* pStageBg = Sprite::create("img/stageSelect/stage_bg.png");
     pStageBg->setScale(size.width/pStageBg->getContentSize().width);
-    
-    // Place the sprite on the center of the screen
     pStageBg->setPosition(Vec2(size.width/2, size.height/2));
-    
-    // Add the sprite to HelloWorld layer as a child layer.
     this->addChild(pStageBg, 0);
     
     //for stageNum of each building
     
-    Vector<MenuItem*> menuVector;
-    for(int i=0; i<9;i++)
+    for(int i=0; i<9; i++)
     {
         std::string img1 = StringUtils::format("img/stageSelect/stage_btn_%d.png", i+1);
         std::string img2 = StringUtils::format("img/stageSelect/stage_btn_%d_n.png", i+1);
-        auto menuBtn = MenuItemImage::create(img1, img2, this,
-                                             menu_selector(stageSelectScene::stageMenu));
+        auto menuBtn = Button::create(img1, img2);
         menuBtn->setPosition(Vec2(size.width*(0.2+0.3*(i%3)), size.height*(0.8-0.2*(i/3))));
-        menuBtn->setScale(1.5);
-        menuBtn->setTag(i);
-        menuVector.pushBack(menuBtn);
+        menuBtn->setScale(scaleF);
+        menuBtn->setTag(buildingNum + i);
+        menuBtn->addClickEventListener(CC_CALLBACK_1(stageSelectScene::stageMenu, this));
+        if(lastStageNum < (buildingNum+i))
+            menuBtn->setEnabled(false);
+        this->addChild(menuBtn);
     }
-    
-    Menu *stageMenu = Menu::createWithArray(menuVector);
-    stageMenu->setPosition(Vec2());
-    
-    this->addChild(stageMenu,1);
-    
-    
-    //µ«µπæ∆∞°±‚ πˆ∆∞
-    MenuItemImage *pGoBack = MenuItemImage::create(
-                                                   "img/btn_goBack.png",
-                                                   "img/btn_goBack_n.png",
-                                                   this,
-                                                   menu_selector(stageSelectScene::menuGoBackCallback));
-    
-    // Place the menu item bottom-right conner.
-    pGoBack->setPosition(Vec2(size.width/1.25, size.height/14.28));
-    
-    // Create a menu with the "close" menu item, it's an auto release object.
-    Menu* pGoBackMenu = Menu::create(pGoBack, NULL);
-    pGoBackMenu->setPosition(Vec2());
-    
-    // Add the menu to HelloWorld layer as a child layer.
-    this->addChild(pGoBackMenu, 1);
-    
-    __NotificationCenter::getInstance()->addObserver(this,
-                                                     callfuncO_selector(stageSelectScene::doMsgRecv),
-                                                     "BuildingNoti", NULL);
+
+    auto backBtn = Button::create("img/btn_goBack.png","img/btn_goBack_n.png");
+    backBtn->setScale(scaleF);
+    backBtn->setPosition(Vec2(size.width-300, 200));
+    backBtn->addClickEventListener(CC_CALLBACK_1(stageSelectScene::menuGoBackCallback, this));
+    this->addChild(backBtn, 1);
     
     return true;
 }
 
 void stageSelectScene::stageMenu(Ref* pSender)
 {
-    music m;
-    m.effectStart("sound/effect_btn_click.mp3");
-    /***
-     ø©±‚ø° ∞‘¿” »≠∏È¿∏∑Œ ¿¸»Ø«œ¥¬∞≈ µÈæÓ∞®!!
-     ****/
-    int check;
-    int dechk;
-    MenuItem *pGet = (MenuItem *)pSender;
-    dechk = pGet->getTag();
-    sStageNum = buildingNum + dechk;
-    check = UserDefault::getInstance()->getIntegerForKey("lastStage");
-    if( check >= sStageNum )
-        this->goStageScene();
+    auto btn = (Button*)pSender;
+    sStageNum = btn->getTag();
+    this->goStageScene();
 }
 
-//µ«µπæ∆∞°±‚
 void stageSelectScene::menuGoBackCallback(Ref* pSender)
 {
     Scene *pScene = BuildingScene::createScene();
@@ -123,22 +92,12 @@ void stageSelectScene::menuGoBackCallback(Ref* pSender)
     Director::getInstance()->replaceScene(trans);
 }
 
-void stageSelectScene::doMsgRecv(Ref* obj)
-{
-    String* pParam = (String*)obj;
-    int flag = pParam->intValue();
-    if(flag>0)
-        buildingNum = flag;
-}
-void stageSelectScene::onExit()
-{
-    Layer::onExit();
-    __NotificationCenter::getInstance()->removeObserver(this, "BuildingNoti");
-}
 void stageSelectScene::goStageScene()
 {
-    UserDefault::getInstance()->setIntegerForKey("curStage",sStageNum);
+    //save curr stage number
+    UserDefault::getInstance()->setIntegerForKey("curStage", sStageNum);
     UserDefault::getInstance()->flush();
+    
     Scene* pScene = gameScene::createScene();
     auto trans = TransitionFade::create(0.5, pScene);
     Director::getInstance()->replaceScene(trans);

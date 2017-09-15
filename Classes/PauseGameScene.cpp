@@ -2,8 +2,6 @@
 #include "mainScene.h"
 #include "HelpScene.h"
 
-using namespace cocos2d;
-
 Scene* PauseGameScene::createScene()
 {
 	Scene* scene = Scene::create();

@@ -47,36 +47,40 @@ bool BuildingScene::init()
     this->addChild(pBuildingBg, 0);
     
     //image scale factor
-    float scaleF = 2.0f;
+    float scaleF = 1.7f;
     
     auto game1Btn = Button::create("img/buildingSelect_btn_b1.png", "img/buildingSelect_btn_b1_n.png");
     game1Btn->setPosition(Vec2(300, 1200));
     game1Btn->setScale(scaleF);
-    game1Btn->setTag(1);
+    game1Btn->setTag(0);
     game1Btn->addClickEventListener(CC_CALLBACK_1(BuildingScene::menuBuildFunction, this));
     this->addChild(game1Btn);
     
     auto game2Btn = Button::create("img/buildingSelect_btn_b2.png", "img/buildingSelect_btn_b2_n.png");
     game2Btn->setPosition(Vec2(800, 1200));
     game2Btn->setScale(scaleF);
-    game2Btn->setTag(2);
+    game2Btn->setTag(1);
+    game2Btn->addClickEventListener(CC_CALLBACK_1(BuildingScene::menuBuildFunction, this));
     this->addChild(game2Btn);
     
     auto game3Btn = Button::create("img/buildingSelect_btn_b3.png", "img/buildingSelect_btn_b3_n.png");
     game3Btn->setPosition(Vec2(300, 600));
     game3Btn->setScale(scaleF);
-    game3Btn->setTag(3);
+    game3Btn->setTag(2);
+    game3Btn->addClickEventListener(CC_CALLBACK_1(BuildingScene::menuBuildFunction, this));
     this->addChild(game3Btn);
     
     auto game4Btn = Button::create("img/buildingSelect_btn_b4.png", "img/buildingSelect_btn_b4_n.png");
     game4Btn->setPosition(Vec2(800, 600));
     game4Btn->setScale(scaleF);
-    game4Btn->setTag(4);
+    game4Btn->setTag(3);
+    game4Btn->addClickEventListener(CC_CALLBACK_1(BuildingScene::menuBuildFunction, this));
     this->addChild(game4Btn);
     
     auto backBtn = Button::create("img/btn_goBack.png", "img/btn_goBack_n.png");
-    backBtn->setPosition(Vec2(200, size.height-200));
+    backBtn->setPosition(Vec2(size.width-300, 200));
     backBtn->setScale(scaleF);
+    backBtn->addClickEventListener(CC_CALLBACK_1(BuildingScene::menuGoBackCallback, this));
     this->addChild(backBtn);
     
     return true;
@@ -88,6 +92,11 @@ void BuildingScene::menuBuildFunction(cocos2d::Ref *pSender)
     Button *item = (Button*)pSender;
     int tag = item->getTag();
     buildingNum = tag*10;
+    
+    // save building Number
+    UserDefault::getInstance()->setIntegerForKey("buildingNum", buildingNum);
+    UserDefault::getInstance()->flush();
+    
     // make scene
     Scene *pScene = stageSelectScene::createScene();
     auto trans = TransitionFade::create(0.5, pScene);
